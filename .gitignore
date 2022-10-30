@@ -1,3 +1,5 @@
 /local
 /dataset_downloader/output
-*.log
+geckodriver.log
+*.mkv
+*.mp4
