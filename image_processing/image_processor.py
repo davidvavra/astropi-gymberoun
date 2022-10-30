@@ -81,7 +81,7 @@ def contrast_stretch(im):
 # another stolen code, calcualtes NDVI
 def calc_ndvi(image):
     b, g, r = cv2.split(image)
-    bottom = (r.astype(float) + b.astype(float))
+    bottom = (r.astype(float) + b.astype(float)) # Red + NIR
     bottom[bottom==0] = 0.01
     ndvi = (b.astype(float) - r) / bottom
     return ndvi
@@ -99,23 +99,23 @@ def process_img(img_path, index, single):
     contrasted = contrast_stretch(original)
     #display(contrasted, 'Contrasted original')
     #cv2.imwrite('contrasted.png', contrasted)
-    # Počítání NDVI
+
+    # Výpočet NDVI
     ndvi = calc_ndvi(contrasted)
-    #display(ndvi, 'NDVI')
     # Kontrast NDVI
     ndvi_contrasted = contrast_stretch(ndvi)
-    #display(ndvi_contrasted, 'NDVI Contrasted')
     # Color mapping NDVI obrázku pro snazší lidské zpracování
     color_mapped_prep = ndvi_contrasted.astype(np.uint8)
-    color_mapped_image = cv2.applyColorMap(color_mapped_prep, cv2.COLORMAP_JET)
-    #display(color_mapped_image, 'Color mapped')
-    
+    color_mapped_image_ndvi = cv2.applyColorMap(color_mapped_prep, cv2.COLORMAP_JET)
+
+
+
     # Pokud je soubor jediný 
     if(single):
         name = os.path.basename(img_path).split('/')[-1].split('.')[:-1][0]
         # Zapsání výstupních souborů
         cv2.imwrite("output/" + name + '_ndvi.png', ndvi_contrasted)
-        cv2.imwrite("output/" + name + '_c-mapped.png', color_mapped_image)
+        cv2.imwrite("output/" + name + '_c-mapped.png', color_mapped_image_ndvi)
         cv2.imwrite("output/" + name + '_original.png', original)
         # Vytvoření ořízlých variant
         crop("output/" + name + "_ndvi-cropped.png", "output/" + name + '_ndvi.png')
@@ -127,7 +127,7 @@ def process_img(img_path, index, single):
         os.mkdir("output/img" + str(index))
         # Zapsání výstupních souborů
         cv2.imwrite("output/" + name + "/" + name + '_ndvi.png', ndvi_contrasted)
-        cv2.imwrite("output/" + name + "/" + name + '_c-mapped.png', color_mapped_image)
+        cv2.imwrite("output/" + name + "/" + name + '_c-mapped.png', color_mapped_image_ndvi)
         cv2.imwrite("output/" + name + "/" + name + '_original.png', original)
         # Vytvoření ořízlých variant
         crop("output/" + name + "/" + name + "_ndvi-cropped.png", "output/" + name + "/" + name + '_ndvi.png')
