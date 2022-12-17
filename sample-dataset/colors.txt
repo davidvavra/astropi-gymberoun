@@ -1,0 +1,10 @@
+Mraky                       #e3b5d7
+Moře/Oceán/Jezero           #0000d7
+Ostrov/Souostroví           #ff6a81
+Řeka                        #00ffd7
+Les                         #075900
+Pole/Louka                  #07ff00
+Poušť/Polopoušť             #ffff00
+Hory/Pohoří                 #430081
+Neurčito/Jiné (pevnina)     #ff6a00
+Neurčito/Jiné               #5a6adc
