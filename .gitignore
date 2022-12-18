@@ -3,3 +3,5 @@
 geckodriver.log
 *.mkv
 *.mp4
+.git
+.vscode
