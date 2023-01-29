@@ -1,5 +1,6 @@
 /local
 /dataset_downloader/output
+__pycache__
 geckodriver.log
 *.mkv
 *.mp4

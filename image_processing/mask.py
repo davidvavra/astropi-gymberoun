@@ -1,8 +1,7 @@
 # Import libraries
-import time
-import numpy
 import os
 
+import numpy
 from PIL import Image, ImageDraw
 
 
@@ -61,7 +60,6 @@ def parent_mask(img, masking_treshold = 40):
     box = mask.getbbox()
     # Crop to wanted data
     cropped = mask.crop(box)
-    cropped.show()
     # Check if image is uable or not
     if is_good(cropped):
         # Return coordinate of box corners
@@ -91,13 +89,14 @@ def mask_im(im, mask_box, color = (0,0,0)):
     # Overlay all images with image in the background, black layer in the foreground and ellipse as transparency mask
     return Image.composite(im, bac, trans_mask)
 
-def process_image(input_image, threshold = 40, output_size = (800,800)):
+def m_process_image(input_image, threshold = 40, output_size = (800,800), image_mask = False):
     """Function to process single image
 
     Args:
-        input_image (PIL.Image): Image to process
+        input_image (string): Path to image to process
         threshold (int): Threshold for processing. Defaults to 40.
         output_size (tuple, optional): Size of outputed image. Defaults to (800,800).
+        image_mask (string): Path to image mask (only for cropping). Defaults to False. (=> no mask to crop)
 
     Returns:
         PIL.Image or bool: PIL.Image if mask successfully created, else False
@@ -110,7 +109,14 @@ def process_image(input_image, threshold = 40, output_size = (800,800)):
         cropped = im.crop(mask_box)
         cropped = mask_im(cropped, (5, 5, cropped.size[0]-5, cropped.size[1]-5))
         resized = cropped.resize(output_size)
-        return resized
+        if image_mask != False:
+            mask_image = Image.open(image_mask)
+            mask_image = mask_image.crop(mask_box)
+            mask_image = mask_im(mask_image, (5, 5, mask_image.size[0]-5, mask_image.size[1]-5))
+            mask_resized = mask_image.resize(output_size)
+            return [resized, mask_resized]
+        
+        return [resized]
     else:
         # Unusable image
         return False
