@@ -30,8 +30,6 @@ raw_image_folder = "images/raw/"
 
 filename2 = "unusable"
 
-photo = None
-
 #Function for creating all folders
 create_folder(base_folder)
 
@@ -48,11 +46,12 @@ now_time = datetime.now()
 while (now_time < start_time + timedelta(minutes=179)):
 
     #taking the image
+    photo = None
     try:
         photo = capture_image(base_folder)
         
-    except:
-        print("Capturing failed")
+    except Exception as err:
+        print(f"Capturing failed because of  {err}")
     
     #cropping the image
     try:
