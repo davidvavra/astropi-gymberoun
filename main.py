@@ -35,6 +35,11 @@ photo = None
 #Function for creating all folders
 create_folder(base_folder)
 
+#Creating logfile
+try:
+    logfile(base_folder/"main.log")
+except:
+    print("Couldnt create logfile")
 
 # Initialise the photo counter
 counter = 1
@@ -52,42 +57,52 @@ while (now_time < start_time + timedelta(minutes=179)):
         photo = capture_image(base_folder)
         
     except:
-        print("Capturing failed")
+        logger.error(f'{e.__class__.__name__}: {e} -- Could not capture the image')
     
     #cropping the image
     try:
-
+        
         outputimage = m_process_image(os.path.join(base_folder, photo))
         if outputimage: #if the image is unusable, m_process_image returns False
+            logger.debug(f'Image considered usable')
             outputimage = outputimage[0]
             filename2 = cropped_folder + "image_croppped" + counter +  ".jpg"
             outputimage.save(filename2)
+            
 
             try:    #giving the image to the AI if it is usable
                 start_classification(filename2)
-            except:
-                print("Couldnt find function")
+                logger.debug(f'main.py gave photo to the AI')
+            except Exception as e:
+                logger.error(f'{e.__class__.__name__}: {e} -- AI did not get the image')
         #if the image is considered unusable we do nothing
         else:
+            logger.debug(f'Image considered unusable')
             filename2 = "unusable"
-    except:
-        photo.save(raw_image_folder + "raw_image" + counter + ".jpg")
+    except Exception as e:
+        logger.error(f'{e.__class__.__name__}: {e} -- Could not process')
+        try:
+            photo.save(raw_image_folder + "raw_image" + counter + ".jpg")
+        except:
+            logger.error(f'{e.__class__.__name__}: {e} -- Could not save the raw image')
 
     
     try:
         location = get_location
-    except:
-        print(":(")
+    except Exception as e:
+        logger.error(f'{e.__class__.__name__}: {e}')
     
     try: 
         sensor_data = get_sensor_data
-    except:
-        print("couldnt get sensor data")
+    except Exception as e:
+        logger.error(f'{e.__class__.__name__}: {e}')
 
     try:
         save_csv(filename2, sensor_data, location)
-    except:
-        print("couldnt save location")
+    except Exception as e:
+        logger.error(f'{e.__class__.__name__}: {e}')
         
+
+    logger.info(f'end of loop number' + counter)
     counter += 1
     sleep(30)
