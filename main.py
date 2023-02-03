@@ -17,18 +17,11 @@ from modules.get_sensor_data import get_sensor_data
 from modules.save_csv import save_csv
 from modules.create_folders import create_folder
 
- 
-# base_folder = Path(__file__).parent.resolve()
 
 base_folder = os.getcwd()
 
-images_folder = "images/"
+sense = SenseHat()
 
-cropped_folder = "images/cropped/"
-
-masked_folder = "images/masked/"
-
-raw_image_folder = "images/raw/"
 
 
 # Function for creating all folders
@@ -56,6 +49,7 @@ except:
 
 # Initialise the photo counter
 counter = 1
+
 # Record the start and current time
 start_time = datetime.now()
 now_time = datetime.now()
