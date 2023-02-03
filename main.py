@@ -7,7 +7,9 @@ import csv
 import os
 from PIL import Image
 
-# Importing our python programs
+from picamera import PiCamera
+
+#Importing our python programs
 import modules
 from modules.mask import m_process_image
 from modules.ai_thread import start_classification
@@ -17,8 +19,14 @@ from modules.get_sensor_data import get_sensor_data
 from modules.save_csv import save_csv
 from modules.create_folders import create_folder
 
+camera = PiCamera()
+resolution = (1296, 972)
+
+camera.resolution = resolution
+
 
 base_folder = os.getcwd()
+
 
 sense = SenseHat()
 
@@ -62,7 +70,7 @@ while (now_time < start_time + timedelta(minutes=179)):
     # Taking the image
     photo = None
     try:
-        photo = capture_image(base_folder)
+        photo = camera.capture(base_folder + "images/last_image.jpg")
         
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
@@ -72,10 +80,15 @@ while (now_time < start_time + timedelta(minutes=179)):
     # Cropping the image
     try:
         
-        filename2 = process_image
-        if filename2 != None:
-            try:    
-                # Giving the image to the AI if it is usable
+        outputimage = m_process_image(os.path.join(base_folder, photo))
+        if outputimage: #if the image is unusable, m_process_image returns False
+            logger.debug(f'Image considered usable')
+            outputimage = outputimage[0]
+            filename2 = cropped_folder + "image_croppped" + counter +  ".jpg"
+            outputimage.save(filename2)
+            
+    
+            try:    #giving the image to the AI if it is usable
                 start_classification(filename2)
                 logger.debug(f'main.py gave photo to the AI')
             except Exception as e:
