@@ -152,6 +152,23 @@ def find_mask(input_folder, treshold, tolerance = 30):
             if passed:
                 return new
 
+def process_image(base_folder, photo):
+    try:
+        outputimage = m_process_image(os.path.join(base_folder, photo))
+        if outputimage: #if the image is unusable, m_process_image returns False
+            outputimage = outputimage[0]
+            filename2 = cropped_folder + "image_croppped" + counter +  ".jpg"
+            outputimage.save(filename2)
+
+            return filename2
+        # if the image is considered unusable we do nothing
+        else:
+            photo.save(raw_image_folder + "raw_image" + counter + ".jpg")
+            return None
+    except:
+        photo.save(raw_image_folder + "raw_image" + counter + ".jpg")
+        return None
+
 if __name__ == "__main__":
     output_size = (800, 800)
 
