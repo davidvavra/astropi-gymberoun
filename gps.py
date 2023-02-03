@@ -9,7 +9,7 @@ def convert(angle):
     return sign < 0, exif_angle
 
 def capture(camera, image):
-    """vyfotí obráyek s polohou."""
+    """vyfotí obrázek s polohou."""
     point = ISS.coordinates()
 
     # Convert the latitude and longitude to EXIF-appropriate representations
