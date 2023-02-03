@@ -39,7 +39,7 @@ def save_coverage(filename):
 
         # Get averag color
         array = np.array(mask)
-        average_color = np.mean(array)
+        average_color = np.mean(array) / 2.55
         coverage.append(average_color)
 
     return(coverage)
