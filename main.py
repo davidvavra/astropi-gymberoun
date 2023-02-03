@@ -11,7 +11,7 @@ from PIL import Image
 from modules.mask import m_process_image
 from modules.ai_thread import start_classification
 from modules.camera_exif import capture_image, get_location, save_location, get_sensor_data, save_csv
-
+from modules.create_folders import create_folder
 
  
 base_folder = Path(__file__).parent.resolve()
@@ -28,7 +28,7 @@ filename2 = "unusable"
 
 
 #Function for creating all folders
-
+create_folder(base_folder)
 
 
 # Initialise the photo counter

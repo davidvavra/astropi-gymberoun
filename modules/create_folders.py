@@ -1,6 +1,6 @@
 import os
 
-def create_folder(base_dir):
+def create_folder(base_folder):
     """Function to create directories for storing and organizing all the images
 
     Args:
