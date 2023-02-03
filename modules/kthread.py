@@ -4,6 +4,8 @@ Code from https://web.archive.org/web/20130503082442/http://mail.python.org/pipe
 import sys
 import trace
 import threading
+import logging
+logger = logging.getLogger("astropi.KThread")
 
 class KThread(threading.Thread):
   """A subclass of threading.Thread, with a kill()
@@ -13,6 +15,7 @@ method."""
     self.killed = False
 
   def start(self):
+    logger.debug("Thread was started")
     """Start the thread."""
     self.__run_backup = self.run
     self.run = self.__run      # Force the Thread to install our trace.
@@ -38,4 +41,5 @@ trace."""
     return self.localtrace
 
   def kill(self):
+      logger.debug("Thread was killed")
       self.killed = True

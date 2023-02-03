@@ -18,7 +18,9 @@ from modules.save_csv import save_csv
 from modules.create_folders import create_folder
 
  
-base_folder = Path(__file__).parent.resolve()
+#base_folder = Path(__file__).parent.resolve()
+
+base_folder = os.getcwd()
 
 images_folder = "images/"
 
@@ -29,8 +31,6 @@ masked_folder = "images/masked/"
 raw_image_folder = "images/raw/"
 
 filename2 = "unusable"
-
-photo = None
 
 #Function for creating all folders
 create_folder(base_folder)
@@ -53,11 +53,12 @@ now_time = datetime.now()
 while (now_time < start_time + timedelta(minutes=179)):
 
     #taking the image
+    photo = None
     try:
         photo = capture_image(base_folder)
         
     except:
-        logger.error(f'{e.__class__.__name__}: {e} -- Could not capture the image')
+        print("Capturing failed")
     
     #cropping the image
     try:
