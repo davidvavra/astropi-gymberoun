@@ -6,12 +6,10 @@ from datetime import datetime, timedelta
 import csv
 import os
 from PIL import Image
-
 from picamera import PiCamera
 
 #Importing our python programs
 from modules.mask import process_image
-from modules.mask import m_process_image
 from modules.ai_thread import start_classification
 from modules.getlocation import get_location
 from modules.get_sensor_data import get_sensor_data
@@ -23,13 +21,14 @@ resolution = (1296, 972)
 
 camera.resolution = resolution
 
-
 base_folder = os.getcwd()
-
 
 sense = SenseHat()
 
 
+# placeholder constant to be replaced
+cropped_folder = os.path.join(base_folder, "images/cropped")
+raw_folder = os.path.join(base_folder, "images/raw")
 
 # Function for creating all folders
 create_folder(base_folder)
@@ -68,8 +67,9 @@ while (now_time < start_time + timedelta(minutes=179)):
 
     # Taking the image
     photo = None
-    try:
-        photo = camera.capture(base_folder + "images/last_image.jpg")
+    try: 
+        camera.capture(base_folder + "/images/last_image.jpg")
+        photo = base_folder + "/images/last_image.jpg"
         
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
@@ -79,7 +79,7 @@ while (now_time < start_time + timedelta(minutes=179)):
     # Cropping the image
     try:
         
-        filename2 = process_image
+        filename2 = process_image(photo, cropped_folder, raw_folder, counter)
         if filename2 != None:
             try:    
                 # Giving the image to the AI if it is usable
