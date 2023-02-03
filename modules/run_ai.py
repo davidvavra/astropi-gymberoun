@@ -5,6 +5,8 @@ from pycoral.adapters import common
 from pycoral.adapters import segment
 from pycoral.utils.edgetpu import make_interpreter
 import numpy as np
+import logging
+logger = logging.getLogger("astropi.run_ai")
 
 class AI():
     """Class containing all stuff around AI model
@@ -31,6 +33,7 @@ class AI():
         else:
             self.colormap = colormap
         self.folder = folder
+        logger.info(f"Initilized model on EdgeTPU with parameters: [width: {self.width}, height: {self.height}, classes: {self.classes}]")
 
     def decode_segmentation_mask_internal(self, mask):
         """Function to recolor mask using colormap (internal)
@@ -55,6 +58,7 @@ class AI():
         # Put color channels back to one image
         self.rgb = np.stack([r,g,b,], axis=2)
         # Return recolored mask
+        logger.debug("Decoded segmented image to mask")
         return self.rgb
 
 
@@ -67,10 +71,13 @@ class AI():
         Returns:
             np.array: np.array of raw model output
         """
+        logger.info(f"Processing image {image} on EdgeTPU")
         img = Image.open(image)
         img = img.resize((self.width,self.height), Image.ANTIALIAS)
         common.set_input(self.interpreter, img)
+        logger.debug("Image loaded. Sending image to EdgeTPU")
         self.interpreter.invoke()
+        logger.debug("Got result from interpreter.")
         self.result = segment.get_output(self.interpreter)
         return self.result
 
@@ -102,11 +109,13 @@ class AI():
         Returns:
             str: where final image is saved
         """
+        logger.info(f"Processing image {image} on EdgeTPU")
         f_name, f_ext = path.splitext(path.basename(image))
         new_f_name = f_name + "_mask"
         final_f_name = new_f_name + f_ext
         self.final_path = path.join(getcwd(), path.join(self.folder, final_f_name))
         self.process_image_internal(image)
         self.get_colored_mask()
+        logger.info(f"Successfully processed image {image} on EdgeTPU. Colored image mask will be saved in {self.final_path}")
         self.output_img.save(self.final_path)
         return self.final_path
