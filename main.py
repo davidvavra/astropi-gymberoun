@@ -1,5 +1,5 @@
 from pathlib import Path
-from logzero import logger, logfile
+from logging import logger, logfile
 from sense_hat import SenseHat
 from time import sleep
 from datetime import datetime, timedelta
@@ -37,7 +37,7 @@ create_folder(base_folder)
 
 #Creating logfile
 try:
-    logfile(base_folder/"main.log")
+    logfile(os.path.join(base_folder,"main.log"))
 except:
     print("Couldnt create logfile")
 
