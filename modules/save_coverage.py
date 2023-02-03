@@ -1,16 +1,16 @@
-# Importing the libraries OpenCV and numpy
 import cv2
 import numpy as np
+import csv
+import os
 
-def save_coverage(filename):
-    """Function to calculate image coverage of different categories and save it to file
-
-    Args:
-        filename (array): Coverage of different things
+def save_coverage(filename, base_folder):
+    """
+    Save mask coverage to CSV file
     """
     coverage = []
+    data_file = os.path.join(base_folder, "csv/masked.csv")
 
-    #colors
+    # Colors
     ocean = [215, 0, 0]
     river = [215, 255, 0]
     clouds = [215, 181, 227]
@@ -42,13 +42,11 @@ def save_coverage(filename):
 
         mask = cv2.inRange(hsv, lower, upper) 
 
-        # Get averag color
+        # Get average color
         array = np.array(mask)
         average_color = np.mean(array) / 2.55
         coverage.append(average_color)
 
-    return(coverage)
-
-    
-
-
+        with open(data_file, 'a', buffering=1, newline='') as f:
+            data_writer = csv.writer(f)
+            data_writer.writerow(coverage)

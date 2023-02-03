@@ -1,5 +1,5 @@
 from pathlib import Path
-from logzero import logger, logfile
+import logging
 from sense_hat import SenseHat
 from time import sleep
 from datetime import datetime, timedelta
@@ -34,11 +34,25 @@ raw_image_folder = "images/raw/"
 # Function for creating all folders
 create_folder(base_folder)
 
-# Creating logfile
+logger = logging.getLogger("astropi")
+#Creating logfile
 try:
-    logfile(base_folder/"main.log")
+    logger.setLevel(logging.DEBUG)
+    # create file handler which logs even debug messages
+    fh = logging.FileHandler(os.path.join(base_folder,"main.log"))
+    fh.setLevel(logging.DEBUG)
+    # create console handler with a higher log level
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.ERROR)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+    # add the handlers to the logger
+    logger.addHandler(fh)
+    logger.addHandler(ch)
 except:
-    print("Couldnt create logfile")
+    print("Couldn't create logfile")
 
 # Initialise the photo counter
 counter = 1
@@ -78,6 +92,10 @@ while (now_time < start_time + timedelta(minutes=179)):
             logger.debug(f'Image considered unusable')
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e} -- Could not process')
+        try:
+            photo.save(raw_image_folder + "raw_image" + str(counter) + ".jpg")
+        except:
+            logger.error(f'{e.__class__.__name__}: {e} -- Could not save the raw image')
 
     location = None
 
@@ -100,6 +118,6 @@ while (now_time < start_time + timedelta(minutes=179)):
         logger.error(f'{e.__class__.__name__}: {e}')
         
 
-    logger.info(f'end of loop number' + counter)
+    logger.info(f'end of loop number {counter}')
     counter += 1
     sleep(30)
