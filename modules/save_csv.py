@@ -9,19 +9,20 @@ def save_csv(location, sensor_data, crop_image, base_folder):
 
     csv_data = []
     data_file = os.path.join(base_folder, "csv/data.csv")
-    try:
+    if crop_image != None:
         csv_data.append(crop_image)
-    except:
+    else:
         csv_data.append("placeholder")
-    try:
+    if sensor_data != None:
         csv_data += sensor_data
-    except:
+    else:
         csv_data += ["","","","","","","","","","","","","","","",""]
-    try:
+    if csv_data != None:
         csv_data += location
-    except:
+    else:
         csv_data += ["",""]
 
     with open(data_file, 'a', buffering=1, newline='') as f:
         data_writer = writer(f)
         data_writer.writerow(csv_data)
+
