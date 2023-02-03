@@ -7,7 +7,7 @@ import csv
 import os
 from PIL import Image
 
-#Importing our python programs
+# Importing our python programs
 import modules
 from modules.mask import m_process_image
 from modules.ai_thread import start_classification
@@ -18,7 +18,7 @@ from modules.save_csv import save_csv
 from modules.create_folders import create_folder
 
  
-#base_folder = Path(__file__).parent.resolve()
+# base_folder = Path(__file__).parent.resolve()
 
 base_folder = os.getcwd()
 
@@ -30,12 +30,11 @@ masked_folder = "images/masked/"
 
 raw_image_folder = "images/raw/"
 
-filename2 = "unusable"
 
-#Function for creating all folders
+# Function for creating all folders
 create_folder(base_folder)
 
-#Creating logfile
+# Creating logfile
 try:
     logfile(base_folder/"main.log")
 except:
@@ -52,51 +51,48 @@ now_time = datetime.now()
 # Run a loop for (almost) three hours
 while (now_time < start_time + timedelta(minutes=179)):
 
-    #taking the image
+    # Taking the image
     photo = None
     try:
         photo = capture_image(base_folder)
         
-    except:
-        print("Capturing failed")
+    except Exception as e:
+        logger.error(f'{e.__class__.__name__}: {e}')
     
-    #cropping the image
+    filename2 = None
+
+    # Cropping the image
     try:
         
-        outputimage = m_process_image(os.path.join(base_folder, photo))
-        if outputimage: #if the image is unusable, m_process_image returns False
-            logger.debug(f'Image considered usable')
-            outputimage = outputimage[0]
-            filename2 = cropped_folder + "image_croppped" + counter +  ".jpg"
-            outputimage.save(filename2)
-            
-
-            try:    #giving the image to the AI if it is usable
+        filename2 = process_image
+        if filename2 != None:
+            try:    
+                # Giving the image to the AI if it is usable
                 start_classification(filename2)
                 logger.debug(f'main.py gave photo to the AI')
             except Exception as e:
                 logger.error(f'{e.__class__.__name__}: {e} -- AI did not get the image')
-        #if the image is considered unusable we do nothing
+        
         else:
+            # If the image is considered unusable we do nothing
             logger.debug(f'Image considered unusable')
-            filename2 = "unusable"
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e} -- Could not process')
-        try:
-            photo.save(raw_image_folder + "raw_image" + counter + ".jpg")
-        except:
-            logger.error(f'{e.__class__.__name__}: {e} -- Could not save the raw image')
 
-    
+    location = None
+
     try:
         location = get_location
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
     
+    sensor_data = None
+
     try: 
         sensor_data = get_sensor_data
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
+
 
     try:
         save_csv(filename2, sensor_data, location)
