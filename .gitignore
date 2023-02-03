@@ -6,3 +6,4 @@ geckodriver.log
 *.mp4
 .git
 .vscode
+*.log

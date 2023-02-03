@@ -1,5 +1,5 @@
 from pathlib import Path
-from logging import logger, logfile
+import logging
 from sense_hat import SenseHat
 from time import sleep
 from datetime import datetime, timedelta
@@ -38,11 +38,29 @@ masked_folder = "images/masked/"
 
 raw_image_folder = "images/raw/"
 
-filename2 = "unusable"
 
-#Function for creating all folders
+# Function for creating all folders
 create_folder(base_folder)
 
+logger = logging.getLogger("astropi")
+#Creating logfile
+try:
+    logger.setLevel(logging.DEBUG)
+    # create file handler which logs even debug messages
+    fh = logging.FileHandler(os.path.join(base_folder,"main.log"))
+    fh.setLevel(logging.DEBUG)
+    # create console handler with a higher log level
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.ERROR)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+    # add the handlers to the logger
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+except:
+    print("Couldn't create logfile")
 
 # Initialise the photo counter
 counter = 1
@@ -55,15 +73,17 @@ now_time = datetime.now()
 # Run a loop for (almost) three hours
 while (now_time < start_time + timedelta(minutes=179)):
 
-    #taking the image
+    # Taking the image
     photo = None
     try:
         photo = camera.capture(base_folder + "images/last_image.jpg")
         
-    except Exception as err:
-        print(f"Capturing failed because of  {err}")
+    except Exception as e:
+        logger.error(f'{e.__class__.__name__}: {e}')
     
-    #cropping the image
+    filename2 = None
+
+    # Cropping the image
     try:
         
         outputimage = m_process_image(os.path.join(base_folder, photo))
@@ -79,34 +99,35 @@ while (now_time < start_time + timedelta(minutes=179)):
                 logger.debug(f'main.py gave photo to the AI')
             except Exception as e:
                 logger.error(f'{e.__class__.__name__}: {e} -- AI did not get the image')
-        #if the image is considered unusable we do nothing
+        
         else:
+            # If the image is considered unusable we do nothing
             logger.debug(f'Image considered unusable')
-            filename2 = "unusable"
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e} -- Could not process')
-        try:
-            photo.save(raw_image_folder + "raw_image" + counter + ".jpg")
-        except:
-            logger.error(f'{e.__class__.__name__}: {e} -- Could not save the raw image')
 
-    
+
+    location = None
+
     try:
         location = get_location
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
     
+    sensor_data = None
+
     try: 
         sensor_data = get_sensor_data
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
 
+
     try:
-        save_csv(filename2, sensor_data, location)
+        save_csv(location, sensor_data, filename2, base_folder)
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
         
-        
-    logger.info(f'end of loop number' + counter)
+
+    logger.info(f'end of loop number {counter}')
     counter += 1
     sleep(30)
