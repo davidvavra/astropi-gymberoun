@@ -10,7 +10,10 @@ from PIL import Image
 #Importing our python programs
 from modules.mask import m_process_image
 from modules.ai_thread import start_classification
-from modules.camera_exif import capture_image, get_location, save_location, get_sensor_data, save_csv
+from modules.capture_image import capture_image 
+from modules.getlocation import get_location
+from modules.get_sensor_data import get_sensor_data
+from modules.save_csv import save_csv
 from modules.create_folders import create_folder
 
  
@@ -70,24 +73,29 @@ while (now_time < start_time + timedelta(minutes=179)):
 
     
     try:
-        location = camera_exif.get_location
+        location = get_location
     except:
         print(":(")
     
-    try:
-        camera_exif.save_location(filename2, location_A)
-    except:
-        print("couldnt save location")
-
     try: 
-        sensor_data = camera_exif.get_sensor_data
+        sensor_data = get_sensor_data
     except:
         print("couldnt get sensor data")
 
     try:
-        camera_exif.save_csv(sensor_data)
+        save_csv(filename2)
+    except:
+        print("couldnt save location")
+
+    try:
+        save_csv(sensor_data)
     except:
         print("couldnt save sensor data")
 
+    try:
+        save_csv(location)
+    except:
+        print("couldnt save sensor data")
+        
     counter += 1
     sleep(30)
