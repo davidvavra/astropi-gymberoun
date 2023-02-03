@@ -38,3 +38,14 @@ def start_classification(image, model="models/deeplab.tflite"):
     t1 = KThread(target=call_AI, args=(image,model,))
     t1.start()
 
+def clean_thread():
+    """Function to kill second thread
+    """
+    # Active threads count
+    act_count = threading.active_count()
+    # List of all currently running threads
+    thr_list = threading.enumerate()
+    # If more than 1 thread are running at the time (1 is main thread)
+    if(act_count > 1):
+        # Kill another thread
+        thr_list[1].kill()
