@@ -18,7 +18,7 @@ from modules.save_csv import save_csv
 from modules.create_folders import create_folder
 
  
-base_folder = Path(__file__).parent.resolve()
+base_folder = os.getcwd()
 
 images_folder = "images/"
 
