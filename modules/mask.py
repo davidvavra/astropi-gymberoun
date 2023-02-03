@@ -21,7 +21,7 @@ def make_mask(im, masking_treshold = 40):
     mask = gray.point(lambda p: p > masking_treshold and 255)
     return mask
 
-def is_good(cropped_mask, min_color = 40):
+def is_good(cropped_mask, orig_size = (1296, 972), min_color = 100):
     """Check if image is usable or not
 
     Args:
@@ -29,18 +29,25 @@ def is_good(cropped_mask, min_color = 40):
         min_color (int, optional): Minimum wanted average of pixels in region. Defaults to 40.
 
     Returns:
-        bool: True if image is usable, otherwise False
+        bool: True : image is usable, otherwise False
     """
     # Check if image is +/- square
-    if cropped_mask.size[0]/cropped_mask.size[1] > 1.05 or cropped_mask.size[0]/cropped_mask.size[1] < 0.95:
+    if cropped_mask.size[0]/cropped_mask.size[1] > 1.4 or cropped_mask.size[0]/cropped_mask.size[1] < 0.7:
         # Image is not good if not square
         return False
     # Create numpy array from image
+
+
     arr = numpy.array(cropped_mask)
     # If average value in image is less than min_color
     if numpy.mean(arr) < min_color:
         # Not good
         return False 
+
+    # check if the mask is at least 55 by 70 percent of the original image
+    if cropped_mask.size[0] < 0.55*orig_size[0] or cropped_mask.size[1] < 0.7*orig_size[1]:
+        return False
+        
     # Else image is good
     return True
 
@@ -115,7 +122,7 @@ def m_process_image(input_image, threshold = 40, output_size = (800,800), image_
             mask_image = mask_im(mask_image, (5, 5, mask_image.size[0]-5, mask_image.size[1]-5))
             mask_resized = mask_image.resize(output_size)
             return [resized, mask_resized]
-        
+
         return [resized]
     else:
         # Unusable image
