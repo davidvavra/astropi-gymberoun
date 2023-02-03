@@ -1,5 +1,5 @@
 from pathlib import Path
-from logging import logger, logfile
+import logging
 from sense_hat import SenseHat
 from time import sleep
 from datetime import datetime, timedelta
@@ -35,11 +35,25 @@ filename2 = "unusable"
 #Function for creating all folders
 create_folder(base_folder)
 
+logger = logging.getLogger("astropi")
 #Creating logfile
 try:
-    logfile(os.path.join(base_folder,"main.log"))
+    logger.setLevel(logging.DEBUG)
+    # create file handler which logs even debug messages
+    fh = logging.FileHandler(os.path.join(base_folder,"main.log"))
+    fh.setLevel(logging.DEBUG)
+    # create console handler with a higher log level
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.ERROR)
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+    # add the handlers to the logger
+    logger.addHandler(fh)
+    logger.addHandler(ch)
 except:
-    print("Couldnt create logfile")
+    print("Couldn't create logfile")
 
 # Initialise the photo counter
 counter = 1
