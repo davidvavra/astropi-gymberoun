@@ -13,7 +13,6 @@ from picamera import PiCamera
 import modules
 from modules.mask import m_process_image
 from modules.ai_thread import start_classification
-from modules.capture_image import capture_image 
 from modules.getlocation import get_location
 from modules.get_sensor_data import get_sensor_data
 from modules.save_csv import save_csv
