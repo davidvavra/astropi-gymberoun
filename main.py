@@ -8,6 +8,7 @@ import os
 from PIL import Image
 
 #Importing our python programs
+import modules
 from modules.mask import m_process_image
 from modules.ai_thread import start_classification
 from modules.capture_image import capture_image 
@@ -83,19 +84,9 @@ while (now_time < start_time + timedelta(minutes=179)):
         print("couldnt get sensor data")
 
     try:
-        save_csv(filename2)
+        save_csv(filename2, sensor_data, location)
     except:
         print("couldnt save location")
-
-    try:
-        save_csv(sensor_data)
-    except:
-        print("couldnt save sensor data")
-
-    try:
-        save_csv(location)
-    except:
-        print("couldnt save sensor data")
         
     counter += 1
     sleep(30)
