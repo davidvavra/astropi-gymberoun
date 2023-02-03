@@ -3,6 +3,11 @@ import cv2
 import numpy as np
 
 def save_coverage(filename):
+    """Function to calculate image coverage of different categories and save it to file
+
+    Args:
+        filename (array): Coverage of different things
+    """
     coverage = []
 
     #colors

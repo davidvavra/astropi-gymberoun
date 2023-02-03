@@ -2,6 +2,7 @@ from modules.kthread import KThread
 from modules.run_ai import AI
 import os
 import threading
+from modules.save_coverage import save_coverage
 from time import sleep
 
 def call_AI(image,model):
@@ -15,9 +16,7 @@ def call_AI(image,model):
     AI_model = AI(model, folder="masked")
     # Get path where final image is saved from AI model
     img_path = AI_model.run_model(image)
-    """
-    TODO: Filipova funkce
-    """
+    print(save_coverage(img_path))
 
 def start_classification(image, model="models/deeplab.tflite"):
     """Function that starts image classification in new thread and kills previous thread if it exists -> it likely got stuck
