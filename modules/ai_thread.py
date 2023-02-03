@@ -1,5 +1,5 @@
-from kthread import KThread
-from run_ai import AI
+from modules.kthread import KThread
+from modules.run_ai import AI
 import os
 import threading
 from time import sleep
