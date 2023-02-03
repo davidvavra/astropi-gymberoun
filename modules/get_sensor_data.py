@@ -2,6 +2,9 @@ from sense_hat import SenseHat
 from datetime import datetime
 
 def get_sensor_data():
+    """
+    Collects data form sensors
+    """
     # Set up Sense Hat
     sense = SenseHat()
     sense_data = []
@@ -83,4 +86,5 @@ def get_sensor_data():
     #Get the date and time
     sense_data.append(datetime.now())
 
-    return sense_dat
+    return sense_data
+
