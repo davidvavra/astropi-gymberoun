@@ -23,7 +23,7 @@ def get_sensor_data():
     except:
         sense_data.append(-6969)
 
-    #Get orientation data
+    # Get orientation data
     orientation = sense.get_orientation()
     try:
         sense_data.append(orientation["yaw"])
@@ -68,7 +68,7 @@ def get_sensor_data():
     except:
         sense_data.append(-6969)
 
-    #Get gyroscope data
+    # Get gyroscope data
     gyro = sense.get_gyroscope_raw()
     try:
         sense_data.append(gyro["x"])
@@ -83,8 +83,9 @@ def get_sensor_data():
     except:
         sense_data.append(-6969)
 
-    #Get the date and time
+    # Get the date and time
     sense_data.append(datetime.now())
 
     return sense_data
+
 
