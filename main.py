@@ -7,6 +7,8 @@ import csv
 import os
 from PIL import Image
 
+from picamera import PiCamera
+
 #Importing our python programs
 import modules
 from modules.mask import m_process_image
@@ -17,7 +19,12 @@ from modules.get_sensor_data import get_sensor_data
 from modules.save_csv import save_csv
 from modules.create_folders import create_folder
 
- 
+camera = PiCamera()
+resolution = (1296, 972)
+
+camera.resolution = resolution
+
+
 base_folder = Path(__file__).parent.resolve()
 
 images_folder = "images/"
@@ -48,7 +55,7 @@ while (now_time < start_time + timedelta(minutes=179)):
     #taking the image
     photo = None
     try:
-        photo = capture_image(base_folder)
+        photo = capture_image(base_folder, camera)
         
     except Exception as err:
         print(f"Capturing failed because of  {err}")
