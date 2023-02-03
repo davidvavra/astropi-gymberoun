@@ -81,7 +81,7 @@ while (now_time < start_time + timedelta(minutes=179)):
         if outputimage: #if the image is unusable, m_process_image returns False
             logger.debug(f'Image considered usable')
             outputimage = outputimage[0]
-            filename2 = cropped_folder + "image_croppped" + counter +  ".jpg"
+            filename2 = cropped_folder + "image_croppped" + str(counter) +  ".jpg"
             outputimage.save(filename2)
             
 
@@ -97,7 +97,7 @@ while (now_time < start_time + timedelta(minutes=179)):
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e} -- Could not process')
         try:
-            photo.save(raw_image_folder + "raw_image" + counter + ".jpg")
+            photo.save(raw_image_folder + "raw_image" + str(counter) + ".jpg")
         except:
             logger.error(f'{e.__class__.__name__}: {e} -- Could not save the raw image')
 
@@ -118,6 +118,6 @@ while (now_time < start_time + timedelta(minutes=179)):
         logger.error(f'{e.__class__.__name__}: {e}')
         
 
-    logger.info(f'end of loop number' + counter)
+    logger.info(f'end of loop number {counter}')
     counter += 1
     sleep(30)
