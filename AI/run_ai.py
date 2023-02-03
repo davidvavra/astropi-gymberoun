@@ -32,7 +32,7 @@ class AI():
             self.colormap = colormap
         self.folder = folder
 
-    def decode_segmentation_masks_internal(self, mask):
+    def decode_segmentation_mask_internal(self, mask):
         """Function to recolor mask using colormap (internal)
 
         Args:
@@ -102,7 +102,7 @@ class AI():
         Returns:
             str: where final image is saved
         """
-        f_name, f_ext = path.splitext(image)
+        f_name, f_ext = path.splitext(path.basename(image))
         new_f_name = f_name + "_mask"
         final_f_name = new_f_name + f_ext
         self.final_path = path.join(getcwd(), path.join(self.folder, final_f_name))
