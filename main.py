@@ -10,10 +10,9 @@ from PIL import Image
 from picamera import PiCamera
 
 #Importing our python programs
-import modules
+from modules.mask import process_image
 from modules.mask import m_process_image
 from modules.ai_thread import start_classification
-from modules.capture_image import capture_image 
 from modules.getlocation import get_location
 from modules.get_sensor_data import get_sensor_data
 from modules.save_csv import save_csv
@@ -80,20 +79,14 @@ while (now_time < start_time + timedelta(minutes=179)):
     # Cropping the image
     try:
         
-        outputimage = m_process_image(os.path.join(base_folder, photo))
-        if outputimage: #if the image is unusable, m_process_image returns False
-            logger.debug(f'Image considered usable')
-            outputimage = outputimage[0]
-            filename2 = cropped_folder + "image_croppped" + counter +  ".jpg"
-            outputimage.save(filename2)
-            
-    
-            try:    #giving the image to the AI if it is usable
+        filename2 = process_image
+        if filename2 != None:
+            try:    
+                # Giving the image to the AI if it is usable
                 start_classification(filename2)
                 logger.debug(f'main.py gave photo to the AI')
             except Exception as e:
                 logger.error(f'{e.__class__.__name__}: {e} -- AI did not get the image')
-        
         else:
             # If the image is considered unusable we do nothing
             logger.debug(f'Image considered unusable')
