@@ -92,10 +92,7 @@ while (now_time < start_time + timedelta(minutes=179)):
             logger.debug(f'Image considered unusable')
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e} -- Could not process')
-        try:
-            photo.save(raw_image_folder + "raw_image" + str(counter) + ".jpg")
-        except:
-            logger.error(f'{e.__class__.__name__}: {e} -- Could not save the raw image')
+
 
     location = None
 
@@ -113,7 +110,7 @@ while (now_time < start_time + timedelta(minutes=179)):
 
 
     try:
-        save_csv(filename2, sensor_data, location)
+        save_csv(location, sensor_data, filename2, base_folder)
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
         
