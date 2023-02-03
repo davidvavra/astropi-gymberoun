@@ -30,6 +30,7 @@ raw_image_folder = "images/raw/"
 
 filename2 = "unusable"
 
+photo = None
 
 #Function for creating all folders
 create_folder(base_folder)
