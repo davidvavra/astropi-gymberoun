@@ -69,7 +69,7 @@ while (now_time < start_time + timedelta(minutes=179)):
     # Taking the image
     photo = None
     try:
-        photo = camera.capture(base_folder + "images/last_image.jpg")
+        photo = camera.capture(base_folder + "/images/last_image.jpg")
         
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
