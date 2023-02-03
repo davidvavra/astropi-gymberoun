@@ -47,7 +47,7 @@ while (now_time < start_time + timedelta(minutes=179)):
 
     #taking the image
     try:
-        photo = camera_exif.capture_image(base_folder)
+        photo = capture_image(base_folder)
         
     except:
         print("Capturing failed")
