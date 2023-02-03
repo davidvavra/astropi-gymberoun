@@ -7,9 +7,12 @@ import csv
 import os
 from PIL import Image
 
+#Importing our python programs
+from modules.mask import m_process_image
+from modules.ai_thread import start_classification
+from modules.camera_exif import capture_image, get_location, save_location, get_sensor_data, save_csv
 
-import mask             #importing our python programs
-from csv_writing import camera_exif
+
  
 base_folder = Path(__file__).parent.resolve()
 
@@ -24,6 +27,8 @@ raw_image_folder = "images/raw/"
 filename2 = "unusable"
 
 
+#Function for creating all folders
+
 
 
 # Initialise the photo counter
@@ -31,6 +36,8 @@ counter = 1
 # Record the start and current time
 start_time = datetime.now()
 now_time = datetime.now()
+
+
 
 # Run a loop for (almost) three hours
 while (now_time < start_time + timedelta(minutes=179)):
@@ -45,14 +52,14 @@ while (now_time < start_time + timedelta(minutes=179)):
     #cropping the image
     try:
 
-        outputimage = mask.m_process_image(os.path.join(base_folder, photo))
+        outputimage = m_process_image(os.path.join(base_folder, photo))
         if outputimage: #if the image is unusable, m_process_image returns False
             outputimage = outputimage[0]
             filename2 = cropped_folder + "image_croppped" + counter +  ".jpg"
             outputimage.save(filename2)
 
             try:    #giving the image to the AI if it is usable
-                AI.start_classification(filename2)
+                start_classification(filename2)
             except:
                 print("Couldnt find function")
         #if the image is considered unusable we do nothing
