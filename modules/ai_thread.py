@@ -23,7 +23,7 @@ def call_AI(image,model):
     logger.info(f"Image {image} processed successfully and final mask was saved to {img_path}")
     logger.info(f"Calculated coverage on image is: {save_coverage(img_path)}")
 
-def start_classification(image, model="models/deeplab.tflite"):
+def start_classification(image, model="model/deeplab.tflite"):
     """Function that starts image classification in new thread and kills previous thread if it exists -> it likely got stuck
 
     Args:
