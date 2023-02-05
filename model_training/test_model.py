@@ -4,9 +4,10 @@ import os
 from scipy.io import loadmat
 from glob import glob
 import cv2
-
+from tensorflow.keras.optimizers import Adam, RMSprop
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from deeplab_v3_plus import DeepLabV3Plus
 import numpy as np
 import tensorboard
 import tensorflow as tf
@@ -14,12 +15,11 @@ import tensorflow as tf
 # Matplotlib settings
 mpl.use('TkAgg')
 
-IMAGE_SIZE = 800
+IMAGE_SIZE = 1024
 DATA_DIR = "/home/cyril/Documents/astropi-gymberoun/local/AI/final_dataset"      # Where are my data ? XD
-MODEL = 'output/GU-Net_v1_noDropout-800px-814p.hdf5'
+MODEL = 'models/model-01.hdf5'
 
-model = tf.keras.models.load_model(MODEL)
-model.summary()
+#model.summary()
 
 def infer(model, image_tensor):
     predictions = model.predict(np.expand_dims((image_tensor), axis=0))
@@ -81,6 +81,7 @@ def plot_samples_matplotlib(display_list, figsize=(5, 3)):
 def plot_predictions(images_list, colormap, model):
     for image_file in images_list:
         image_tensor = read_image(image_file)
+        print(image_tensor.shape)
         prediction_mask = infer(image_tensor=image_tensor, model=model)
         prediction_colormap = decode_segmentation_masks(prediction_mask, colormap, 10)
         overlay = get_overlay(image_tensor, prediction_colormap)
@@ -89,6 +90,18 @@ def plot_predictions(images_list, colormap, model):
         )
 
 if __name__ == "__main__":
+    #model = tf.keras.models.load_model(MODEL)
+    loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+    model = DeepLabV3Plus(num_classes=10, base_model="MobileNetV2")(input_size=(1024,1024))
+    model.compile(
+        optimizer=RMSprop(learning_rate=1e-3),
+        loss=loss,
+        metrics=["accuracy"],
+    )
+    model.load_weights(MODEL)
+
+    model.summary()
+    print(model.get_layer("input_1").input_shape)
     train_images = sorted(glob(os.path.join(DATA_DIR, "train/images/*")))
     #print(train_images)
 
@@ -105,4 +118,4 @@ if __name__ == "__main__":
 
     #plot_predictions(train_images[150:154], colormap, model=model)
     #print(os.path.join(DATA_DIR, "train_backup/images/cyril_027.jpg"))
-    plot_predictions([os.path.join(DATA_DIR, "train backup/images/matyas_008.jpg")], colormap, model=model)
+    plot_predictions([os.path.join(DATA_DIR, "train/images/train_008.jpg")], colormap, model=model)
