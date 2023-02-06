@@ -69,15 +69,17 @@ now_time = datetime.now()
 while (now_time < start_time + timedelta(minutes=179)):
 
     # Taking the image
-    photo = None
+    took_photo = False
     try: 
         camera.capture(last_im_path)
+        took_photo = True
+
         
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
     
     filename2 = None
-    if not photo is None:
+    if took_photo:
         # Cropping the image
         try:
             
