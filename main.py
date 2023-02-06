@@ -15,7 +15,7 @@ from modules.getlocation import get_location
 from modules.get_sensor_data import get_sensor_data
 from modules.save_csv import save_csv
 from modules.create_folders import create_folder
-from create_csv_files import create_csv_file
+from modules.create_csv_files import create_csv_file
 
 camera = PiCamera()
 resolution = (1296, 972)
