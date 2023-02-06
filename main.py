@@ -29,9 +29,11 @@ sense = SenseHat()
 # placeholder constant to be replaced
 cropped_folder = os.path.join(base_folder, "images/cropped")
 raw_folder = os.path.join(base_folder, "images/raw")
+last_im_path = os.path.join(base_folder, "images/last_image.jpg")
 
 # Function for creating all folders
 create_folder(base_folder)
+create_csv_files(base_folder)
 
 logger = logging.getLogger("astropi")
 #Creating logfile
@@ -68,8 +70,7 @@ while (now_time < start_time + timedelta(minutes=179)):
     # Taking the image
     photo = None
     try: 
-        camera.capture(base_folder + "/images/last_image.jpg")
-        photo = base_folder + "/images/last_image.jpg"
+        camera.capture(last_im_path)
         
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
@@ -79,7 +80,7 @@ while (now_time < start_time + timedelta(minutes=179)):
         # Cropping the image
         try:
             
-            filename2 = process_image(photo, base_folder, cropped_folder, raw_folder, counter, logger)
+            filename2 = process_image(last_im_path, base_folder, cropped_folder, raw_folder, counter)
             if filename2 != None:
                 try:    
                     # Giving the image to the AI if it is usable
@@ -97,14 +98,14 @@ while (now_time < start_time + timedelta(minutes=179)):
     location = None
 
     try:
-        location = get_location
+        location = get_location()
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
     
     sensor_data = None
 
     try: 
-        sensor_data = get_sensor_data
+        sensor_data = get_sensor_data(sense)
     except Exception as e:
         logger.error(f'{e.__class__.__name__}: {e}')
 

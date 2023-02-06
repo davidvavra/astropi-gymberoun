@@ -4,6 +4,9 @@ import os
 import numpy
 from PIL import Image, ImageDraw
 
+import logging
+logger = logging.getLogger("astropi.mask")
+
 
 
 def make_mask(im, masking_treshold = 40):
@@ -153,7 +156,7 @@ def find_mask(input_folder, treshold, tolerance = 30):
             if passed:
                 return new
 
-def process_image(photo, base_folder, cropped_folder, raw_folder, counter, logger):
+def process_image(photo_path, base_folder, cropped_folder, raw_folder, counter):
     """Function to crop and preprocess a single image during the experiment
 
     Args:
@@ -167,8 +170,8 @@ def process_image(photo, base_folder, cropped_folder, raw_folder, counter, logge
     Returns:
         string - path to the processed image or None if the image was deemed unusable;
     """
-    photo_path = os.path.join(base_folder, photo)
-    raw_path  = os.path.join(raw_folder, f"image{counter}_raw.jpg"))
+
+    raw_path  = os.path.join(raw_folder, f"image{counter}_raw.jpg")s
     try:
         
         outputimage = m_process_image(photo_path)
