@@ -15,6 +15,7 @@ from modules.getlocation import get_location
 from modules.get_sensor_data import get_sensor_data
 from modules.save_csv import save_csv
 from modules.create_folders import create_folder
+from create_csv_files import create_csv_file
 
 camera = PiCamera()
 resolution = (1296, 972)
@@ -33,7 +34,7 @@ last_im_path = os.path.join(base_folder, "images/last_image.jpg")
 
 # Function for creating all folders
 create_folder(base_folder)
-create_csv_files(base_folder)
+create_csv_file(base_folder)
 
 logger = logging.getLogger("astropi")
 #Creating logfile
