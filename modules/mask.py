@@ -167,8 +167,11 @@ def process_image(photo, base_folder, cropped_folder, raw_folder, counter, logge
     Returns:
         string - path to the processed image or None if the image was deemed unusable;
     """
+    photo_path = os.path.join(base_folder, photo)
+    raw_path  = os.path.join(raw_folder, f"image{counter}_raw.jpg"))
     try:
-        outputimage = m_process_image(os.path.join(base_folder, photo))
+        
+        outputimage = m_process_image(photo_path)
         if outputimage: # if the image is unusable, m_process_image returns False
             logger.debug(f"image number {counter} cropped succesfully")
             outputimage = outputimage[0] # m_process image returns a list
@@ -179,11 +182,11 @@ def process_image(photo, base_folder, cropped_folder, raw_folder, counter, logge
         # if the image is considered unusable we do nothing
         else:
             logger.debug(f"image number {counter} could not be cropped")
-            outputimage.save(os.path.join(raw_folder, f"image{counter}_raw.jpg"))
+            os.system("cp " + photo_path + " " + raw_path)
             return None
     except:
         logger.error(f"Error occured while trying to process image number {counter}")
-        outputimage.save(os.path.join(raw_folder, f"image{counter}_raw.jpg"))
+        os.system("cp " + photo_path + " " + raw_path)
         return None
 
 if __name__ == "__main__":
