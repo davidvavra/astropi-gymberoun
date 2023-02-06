@@ -171,7 +171,7 @@ def process_image(photo_path, base_folder, cropped_folder, raw_folder, counter):
         string - path to the processed image or None if the image was deemed unusable;
     """
 
-    raw_path  = os.path.join(raw_folder, f"image{counter}_raw.jpg")s
+    raw_path  = os.path.join(raw_folder, f"image{counter}_raw.jpg")
     try:
         
         outputimage = m_process_image(photo_path)
