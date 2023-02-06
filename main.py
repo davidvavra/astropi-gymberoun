@@ -75,23 +75,23 @@ while (now_time < start_time + timedelta(minutes=179)):
         logger.error(f'{e.__class__.__name__}: {e}')
     
     filename2 = None
-
-    # Cropping the image
-    try:
-        
-        filename2 = process_image(photo, cropped_folder, raw_folder, counter)
-        if filename2 != None:
-            try:    
-                # Giving the image to the AI if it is usable
-                start_classification(filename2)
-                logger.debug(f'main.py gave photo to the AI')
-            except Exception as e:
-                logger.error(f'{e.__class__.__name__}: {e} -- AI did not get the image')
-        else:
-            # If the image is considered unusable we do nothing
-            logger.debug(f'Image considered unusable')
-    except Exception as e:
-        logger.error(f'{e.__class__.__name__}: {e} -- Could not process')
+    if not photo is None:
+        # Cropping the image
+        try:
+            
+            filename2 = process_image(photo, base_folder, cropped_folder, raw_folder, counter, logger)
+            if filename2 != None:
+                try:    
+                    # Giving the image to the AI if it is usable
+                    start_classification(filename2)
+                    logger.debug(f'main.py gave photo to the AI')
+                except Exception as e:
+                    logger.error(f'{e.__class__.__name__}: {e} -- AI did not get the image')
+            else:
+                # If the image is considered unusable we do nothing
+                logger.debug(f'Image considered unusable')
+        except Exception as e:
+            logger.error(f'{e.__class__.__name__}: {e} -- Could not process')
 
 
     location = None

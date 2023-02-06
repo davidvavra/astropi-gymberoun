@@ -152,20 +152,36 @@ def find_mask(input_folder, treshold, tolerance = 30):
             if passed:
                 return new
 
-def process_image(photo, cropped_folder, raw_folder, counter):
+def process_image(photo, base_folder, cropped_folder, raw_folder, counter, logger):
+    """Function to crop and preprocess a single image during the experiment
+
+    Args:
+        photo (string) - relative path to image to be processed 
+        base_folder (string) - relative path to base folder
+        cropped_folder (string) - relative path to the output folder for cropped_imgaes
+        raw_folder (string) - relative path to the folder to save unprocessable images in
+        counter (int) - current count of the images
+        logger - logging object
+
+    Returns:
+        string - path to the processed image or None if the image was deemed unusable;
+    """
     try:
         outputimage = m_process_image(os.path.join(base_folder, photo))
-        if outputimage: #if the image is unusable, m_process_image returns False
-            outputimage = outputimage[0]
-            filename2 = os.path.join(cropped_folder, f"image{counter}_croppped.jpg")
+        if outputimage: # if the image is unusable, m_process_image returns False
+            logger.debug(f"image number {counter} cropped succesfully")
+            outputimage = outputimage[0] # m_process image returns a list
+            filename2 = os.path.join(cropped_folder, f"image_{counter}_croppped.jpg")
             outputimage.save(filename2)
 
             return filename2
         # if the image is considered unusable we do nothing
         else:
+            logger.debug(f"image number {counter} could not be cropped")
             photo.save(os.path.join(raw_folder, f"image{counter}_raw.jpg"))
             return None
     except:
+        logger.error(f"Error occured while trying to process image number {counter}")
         photo.save(os.path.join(raw_folder, f"image{counter}_raw.jpg"))
         return None
 
