@@ -5,6 +5,7 @@ import numpy
 from PIL import Image, ImageDraw
 
 
+
 def make_mask(im, masking_treshold = 40):
     """Function to create mask B&W mask from image
 
@@ -178,11 +179,11 @@ def process_image(photo, base_folder, cropped_folder, raw_folder, counter, logge
         # if the image is considered unusable we do nothing
         else:
             logger.debug(f"image number {counter} could not be cropped")
-            photo.save(os.path.join(raw_folder, f"image{counter}_raw.jpg"))
+            outputimage.save(os.path.join(raw_folder, f"image{counter}_raw.jpg"))
             return None
     except:
         logger.error(f"Error occured while trying to process image number {counter}")
-        photo.save(os.path.join(raw_folder, f"image{counter}_raw.jpg"))
+        outputimage.save(os.path.join(raw_folder, f"image{counter}_raw.jpg"))
         return None
 
 if __name__ == "__main__":
