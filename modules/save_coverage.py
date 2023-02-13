@@ -47,6 +47,6 @@ def save_coverage(filename, base_folder):
         average_color = np.mean(array) / 2.55
         coverage.append(average_color)
 
-        with open(data_file, 'a', buffering=1, newline='') as f:
-            data_writer = csv.writer(f)
-            data_writer.writerow(coverage)
+    with open(data_file, 'a', buffering=1, newline='') as f:
+        data_writer = csv.writer(f)
+        data_writer.writerow(coverage)
