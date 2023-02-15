@@ -37,8 +37,8 @@ def save_coverage(filename, base_folder):
 
         # Defining lower and upper bound HSV values
         h = hsv_color[0][0][0]
-        lower = np.array([h-2, 50, 50])
-        upper = np.array([h+2, 255, 255])
+        lower = np.array([h, 50, 50])
+        upper = np.array([h, 255, 255])
 
         mask = cv2.inRange(hsv, lower, upper) 
 
