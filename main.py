@@ -18,7 +18,7 @@ from modules.create_folders import create_folder
 from modules.create_csv_files import create_csv_file
 
 camera = PiCamera()
-resolution = (1296, 972)
+resolution = (1820, 1024)
 
 camera.resolution = resolution
 
@@ -83,7 +83,7 @@ while (now_time < start_time + timedelta(minutes=179)):
         # Cropping the image
         try:
             
-            filename2 = process_image(last_im_path, base_folder, cropped_folder, raw_folder, counter)
+            filename2 = process_image(last_im_path, base_folder, cropped_folder, raw_folder, counter, output_size = (1024, 1024))
             if filename2 != None:
                 try:    
                     # Giving the image to the AI if it is usable

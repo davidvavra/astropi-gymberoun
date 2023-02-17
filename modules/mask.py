@@ -25,7 +25,7 @@ def make_mask(im, masking_treshold = 40):
     mask = gray.point(lambda p: p > masking_treshold and 255)
     return mask
 
-def is_good(cropped_mask, orig_size = (1296, 972), min_color = 100):
+def is_good(cropped_mask, orig_size, min_color = 100):
     """Check if image is usable or not
 
     Args:
@@ -72,7 +72,7 @@ def parent_mask(img, masking_treshold = 40):
     # Crop to wanted data
     cropped = mask.crop(box)
     # Check if image is uable or not
-    if is_good(cropped):
+    if is_good(cropped, img.size):
         # Return coordinate of box corners
         return box
     else:
@@ -100,7 +100,7 @@ def mask_im(im, mask_box, color = (0,0,0)):
     # Overlay all images with image in the background, black layer in the foreground and ellipse as transparency mask
     return Image.composite(im, bac, trans_mask)
 
-def m_process_image(input_image, threshold = 40, output_size = (800,800), image_mask = False):
+def m_process_image(input_image, threshold = 40, output_size = (1024, 1024), image_mask = False):
     """Function to process single image
 
     Args:
@@ -156,7 +156,7 @@ def find_mask(input_folder, treshold, tolerance = 30):
             if passed:
                 return new
 
-def process_image(photo_path, base_folder, cropped_folder, raw_folder, counter):
+def process_image(photo_path, base_folder, cropped_folder, raw_folder, counter, output_size = (1024, 1024)):
     """Function to crop and preprocess a single image during the experiment
 
     Args:
