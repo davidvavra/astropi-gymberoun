@@ -13,14 +13,14 @@ def process_image(base_folder, logger, counter):
         string - path to the processed image or None if the image was deemed unusable;
     """
 
-    photo_path = base_folder / files.LAST_IMAGE_FILE
-    raw_path = base_folder / files.RAW_IMAGES_FOLDER / f"image{counter}_raw.jpg"
+    photo_path = f"{base_folder}/{files.LAST_IMAGE_FILE}"
+    raw_path = f"{base_folder}/{files.RAW_IMAGES_FOLDER}/image{counter}_raw.jpg"
     try:
-        output = _process_image(base_folder / files.LAST_IMAGE_FILE)
+        output = _process_image(photo_path)
         if output:  # Image is usable
             logger.debug(f"image number {counter} cropped succesfully")
             processed_image = output[0]
-            path = base_folder / files.CROPPED_IMAGES_FOLDER / f"image_{counter}_croppped.jpg"
+            path = f"{base_folder}/{files.CROPPED_IMAGES_FOLDER}/image_{counter}_croppped.jpg"
             processed_image.save(path)
             return path
         # if the image is considered unusable we do nothing

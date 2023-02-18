@@ -19,71 +19,27 @@ CLASSIFICATION_CSV_FILE = f"{CSV_FOLDER}/classification.csv"
 
 
 def create_folders(logger, base_folder):
-    # Create images folder
-    try:
-        if not (os.path.isdir(base_folder / IMAGES_FOLDER)):
-            os.mkdir(base_folder / IMAGES_FOLDER)
-            logger.info(f"Created directory 'images'")
-        else:
-            logger.info(f"Directory 'images' already exists.")
-    except Exception as E:
-        logger.error(f"Exception {E} while creating 'images' directory")
-
-    # Create images/raw folder
-    try:
-        if not (os.path.isdir(base_folder / RAW_IMAGES_FOLDER)):
-            os.mkdir(base_folder / RAW_IMAGES_FOLDER)
-            logger.info(f"Created directory 'images/raw'")
-        else:
-            logger.info(f"Directory 'images/raw' already exists.")
-    except Exception as E:
-        logger.error(f"Exception {E} while creating 'images/raw' directory")
-
-    # Create images/cropped folder
-    try:
-        if not (os.path.isdir(base_folder / CROPPED_IMAGES_FOLDER)):
-            os.mkdir(base_folder / CROPPED_IMAGES_FOLDER)
-            logger.info(f"Created directory 'images/cropped'")
-        else:
-            logger.info(f"Directory 'images/cropped' already exists.")
-    except Exception as E:
-        logger.error(f"Exception {E} while creating 'images/cropped' directory")
-
-    # Create images/masked folder
-    try:
-        if not (os.path.isdir(base_folder / MASKED_IMAGES_FOLDER)):
-            os.mkdir(base_folder / MASKED_IMAGES_FOLDER)
-            logger.info(f"Created directory 'images/masked'")
-        else:
-            logger.info(f"Directory 'images/masked' already exists.")
-    except Exception as E:
-        logger.error(f"Exception {E} while creating 'images/masked' directory")
-
-    # Create csv folder
-    try:
-        if not (os.path.isdir(base_folder / CSV_FOLDER)):
-            os.mkdir(base_folder / CSV_FOLDER)
-            logger.info(f"Created directory 'csv'")
-        else:
-            logger.info(f"Directory 'csv' already exists.")
-    except Exception as E:
-        logger.error(f"Exception {E} while creating 'csv' directory")
+    _create_folder(logger, base_folder, IMAGES_FOLDER)
+    _create_folder(logger, base_folder, RAW_IMAGES_FOLDER)
+    _create_folder(logger, base_folder, CROPPED_IMAGES_FOLDER)
+    _create_folder(logger, base_folder, MASKED_IMAGES_FOLDER)
+    _create_folder(logger, base_folder, CSV_FOLDER)
 
 
 def create_csv_files(base_folder):
-    with open(base_folder / DATA_CSV_FILE, 'w') as f:
-        writer = csv.writer(f)
+    with open(f"{base_folder}/{DATA_CSV_FILE}", 'w') as f:
+        writer1 = csv.writer(f)
         header = (
             "Date/time", "Image", "Temperature", "Pressure", "Humidity", "Yaw", "Pitch", "Row", "Mag_x", "Mag_y",
             "Mag_z", "Acc_x",
             "Acc_y", "Acc_z", "Gyro_x", "Gyro_y", "Gyro_z", "Latitude", "Longitude")
-        writer.writerow(header)
+        writer1.writerow(header)
 
-    with open(base_folder / CLASSIFICATION_CSV_FILE, 'w') as f:
-        writer = csv.writer(f)
+    with open(f"{base_folder}/{CLASSIFICATION_CSV_FILE}", 'w') as f:
+        writer2 = csv.writer(f)
         header = ("Image", "Ocean", "River", "Clouds", "Forest", "Field", "Desert", "Unknown land", "Unknown", "Island",
                   "Mountains")
-        writer.writerow(header)
+        writer2.writerow(header)
 
 
 def add_data_csv_row(base_folder, location, sensor_data, image_path):
@@ -106,7 +62,7 @@ def add_data_csv_row(base_folder, location, sensor_data, image_path):
     else:
         csv_data += ["", ""]
     # Write CSV row
-    with open(base_folder / DATA_CSV_FILE, 'a', buffering=1, newline='') as f:
+    with open(f"{base_folder}/{DATA_CSV_FILE}", 'a', buffering=1, newline='') as f:
         data_writer = writer(f)
         data_writer.writerow(csv_data)
 
@@ -123,6 +79,18 @@ def add_classification_csv_row(base_folder, image_path, coverage):
     # Add coverage data
     csv_data += coverage
     # Write CSV row
-    with open(base_folder / CLASSIFICATION_CSV_FILE, 'a', buffering=1, newline='') as f:
+    with open(f"{base_folder}/{CLASSIFICATION_CSV_FILE}", 'a', buffering=1, newline='') as f:
         data_writer = csv.writer(f)
         data_writer.writerow(csv_data)
+
+
+def _create_folder(logger, base_folder, folder):
+    try:
+        path = f"{base_folder}/{folder}"
+        if not (os.path.isdir(path)):
+            os.mkdir(path)
+            logger.info(f"Created directory '{folder}'")
+        else:
+            logger.info(f"Directory '{folder}' already exists.")
+    except Exception as E:
+        logger.error(f"Exception {E} while creating '{folder}' directory")

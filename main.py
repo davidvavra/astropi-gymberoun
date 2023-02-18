@@ -26,7 +26,7 @@ files.create_folders(logger, base_folder)
 files.create_csv_files(base_folder)
 
 # Initialise the photo counter
-counter = 1
+counter = 0
 
 # Record the start and current time
 start_time = datetime.now()
@@ -34,6 +34,10 @@ now_time = datetime.now()
 
 # Run a loop for (almost) three hours
 while now_time < start_time + timedelta(minutes=178):
+    # Start iteration
+    counter += 1
+    logger.info(f'Iteration {counter}')
+
     # Capture image
     image_file = None
     try:
@@ -74,7 +78,6 @@ while now_time < start_time + timedelta(minutes=178):
     except Exception as e:
         logger.error(f'Failed to save data to CSV: {e}')
 
-    # Next iteration
-    logger.info(f'Iteration {counter}')
-    counter += 1
+    # Wait till next iteration
     sleep(30)
+    now_time = datetime.now()

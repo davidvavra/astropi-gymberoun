@@ -8,9 +8,10 @@ def create_logger(base_folder):
     logger = logging.getLogger("astropi")
     try:
         logger.setLevel(logging.DEBUG)
-        if not (os.path.isdir(base_folder / files.LOGS_FOLDER)):
-            os.mkdir(base_folder / files.LOGS_FOLDER)
-        fh = logging.FileHandler(base_folder / files.LOGS_FOLDER / "main.log")
+        folder_path = f"{base_folder}/{files.LOGS_FOLDER}"
+        if not (os.path.isdir(folder_path)):
+            os.mkdir(folder_path)
+        fh = logging.FileHandler(f"{folder_path}/main.log")
         fh.setLevel(logging.DEBUG)
         # create console handler with a higher log level
         ch = logging.StreamHandler()
