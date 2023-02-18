@@ -33,7 +33,7 @@ def get(filename):
 
     for i in colors:
         # Get color
-        color = np.np.uint8([[i]])
+        color = np.uint8([[i]])
         hsv_color = cv2.cvtColor(color, cv2.COLOR_BGR2HSV)
 
         # Defining lower and upper bound HSV values

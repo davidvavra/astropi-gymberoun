@@ -6,7 +6,7 @@ from pycoral.adapters import segment
 from pycoral.utils.edgetpu import make_interpreter
 import numpy as np
 import logging
-logger = logging.getLogger("astropi.run_ai")
+logger = logging.getLogger("astropi.thread")
 
 class AI():
     """Class containing all stuff around AI model
