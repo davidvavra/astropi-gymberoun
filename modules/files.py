@@ -19,12 +19,12 @@ DATA_CSV_FILE = f"{CSV_FOLDER}/data.csv"
 CLASSIFICATION_CSV_FILE = f"{CSV_FOLDER}/classification.csv"
 
 
-def create_folders(logger, base_folder):
-    _create_folder(logger, base_folder, IMAGES_FOLDER)
-    _create_folder(logger, base_folder, RAW_IMAGES_FOLDER)
-    _create_folder(logger, base_folder, CROPPED_IMAGES_FOLDER)
-    _create_folder(logger, base_folder, MASKED_IMAGES_FOLDER)
-    _create_folder(logger, base_folder, CSV_FOLDER)
+def create_folders(base_folder):
+    _create_folder(base_folder, IMAGES_FOLDER)
+    _create_folder(base_folder, RAW_IMAGES_FOLDER)
+    _create_folder(base_folder, CROPPED_IMAGES_FOLDER)
+    _create_folder(base_folder, MASKED_IMAGES_FOLDER)
+    _create_folder(base_folder, CSV_FOLDER)
 
 
 def create_csv_files(base_folder):
@@ -85,7 +85,7 @@ def add_classification_csv_row(base_folder, image_path, coverage):
         data_writer.writerow(csv_data)
 
 
-def _create_folder(logger, base_folder, folder):
+def _create_folder(base_folder, folder):
     try:
         path = f"{base_folder}/{folder}"
         if not (os.path.isdir(path)):

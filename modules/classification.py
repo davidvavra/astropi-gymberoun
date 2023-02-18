@@ -6,14 +6,14 @@ from modules.run_ai import AI
 from modules import coverage
 from modules import files
 
-logger_thread = logging.getLogger("astropi-thread")
+logger_thread = logging.getLogger("astropi.thread")
+logger_main = logging.getLogger("astropi.main")
 
 
-def start(logger, base_folder, image, model="modules/model/q_PAN_MNV2-1024_INT8_edgetpu.tflite"):
+def start(base_folder, image, model="modules/model/q_PAN_MNV2-1024_INT8_edgetpu.tflite"):
     """Function that starts image classification in new thread and kills previous thread if it exists -> it likely got stuck
 
     Args:
-        logger: main logger
         base_folder (str): base folder for all data
         image (str): path to image to process
         model (str, optional): path to model if different wanted. Defaults to "models/deeplab.tflite".
@@ -22,24 +22,23 @@ def start(logger, base_folder, image, model="modules/model/q_PAN_MNV2-1024_INT8_
     act_count = threading.active_count()
     # List of all currently running threads
     thr_list = threading.enumerate()
-    logger.debug(f"Currently active threads: {act_count} <file: classification.py, fn: start>")
+    logger_main.debug(f"Currently active threads: {act_count} <file: classification.py, fn: start>")
     # If more than 1 thread are running at the time (1 is main thread)
     if (act_count > 1):
         # Kill another thread
-        logger.warning(f"There were too many threads so one will be killed <file: classification.py, fn: start>")
+        logger_main.warning(f"There were too many threads so one will be killed <file: classification.py, fn: start>")
         try:
             thr_list[1].kill()
         except Exception as E:
-            logger.critical(f'Unable to kill thread due to Exception: {E} <file: classification.py, fn: start>')
+            logger_main.critical(f'Unable to kill thread due to Exception: {E} <file: classification.py, fn: start>')
     # Start processing new image
-    logger.info(f"Starting image processing on another thread with model {model} on image {image} <file: classification.py, fn:start>")
+    logger_main.info(f"Starting image processing on another thread with model {model} on image {image} <file: classification.py, fn:start>")
     try:
-        t1 = KThread(target=_run_classification_in_thread, args=(base_folder, image, model,))
+        t1 = KThread(target=_run_classification_in_thread, args=(base_folder, image, model))
         t1.start()
+        logger_main.debug("Started another thread <file: classification.py, fn: start>")
     except Exception as E:
-        logger.critical(f'Unable to start another thread due to Exception: {E} <file: classification.py, fn: start>')
-    else: 
-        logger.debug("Started another thread <file: classification.py, fn: start>")
+        logger_main.critical(f'Unable to start another thread due to Exception: {E} <file: classification.py, fn: start>')
 
 
 def _run_classification_in_thread(base_folder, image, model):

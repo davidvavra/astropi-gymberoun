@@ -1,6 +1,6 @@
 from orbit import ISS
 import logging
-logger = logging.getLogger("astropi.thread")
+logger = logging.getLogger("astropi.main")
 
 def get():
     """Function which gets current location of ISS

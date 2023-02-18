@@ -21,7 +21,7 @@ sense = SenseHat()
 # File & folder setup
 base_folder = Path(__file__).parent.resolve()
 logger = logs.create_logger(base_folder)
-files.create_folders(logger, base_folder)
+files.create_folders(base_folder)
 files.create_csv_files(base_folder)
 
 # Initialise the photo counter
@@ -42,14 +42,14 @@ while now_time < start_time + timedelta(minutes=178):
     try:
         camera.capture(f"{base_folder}/{files.LAST_IMAGE_FILE}")
         # Crop image & prepare for classification
-        output = images.process_image(base_folder, logger, counter)
+        output = images.process_image(base_folder, counter)
         image_file = output[0]
         usable = output[1]
         if usable:
             # Image considered usable for classification
             try:
                 # Start classification in separate thread
-                classification.start(logger, base_folder, image_file)
+                classification.start(base_folder, image_file)
                 logger.debug(f'Image passed to the classification thread')
             except Exception as e:
                 logger.error(f'Classification failed: {e}')
