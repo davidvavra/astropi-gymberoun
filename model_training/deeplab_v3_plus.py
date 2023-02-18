@@ -6,9 +6,8 @@ The implementation of DeepLabV3Plus based on Tensorflow.
 @Project: https://github.com/luyanger1799/amazing-semantic-segmentation
 
 """
-import tensorflow as tf
-
 import layers as custom_layers
+import tensorflow as tf
 from network import Network
 
 layers = tf.keras.layers

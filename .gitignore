@@ -7,3 +7,5 @@ geckodriver.log
 .git
 .vscode
 *.log
+*.hdf5
+.idea
