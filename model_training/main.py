@@ -12,12 +12,12 @@ from fcn import FCN
 from pan import PAN
 from keras_applications import imagenet_utils
 
-IMAGE_SIZE = 800
+IMAGE_SIZE = 1024
 NUM_CLASSES = 10
 BATCH_SIZE = 1
 DATA_DIR = "/home/cyril/Documents/astropi-gymberoun/local/AI/final_dataset"
 MODE = 3 # 1 - train, 2 - test, 3 - convert, 4 - evaluate
-MODEL = 'models/DLAB-800.hdf5'
+MODEL = 'models/DLAB-VGG16-1024.hdf5'
 
 mpl.use('TkAgg')
 
@@ -34,7 +34,7 @@ tf.keras.backend.clear_session()
 def create_model(compile=False):
     #model= DeeplabV3Plus(image_size=IMAGE_SIZE, num_classes=NUM_CLASSES)
     #model= UNET(img_size=IMAGE_SIZE, num_classes=NUM_CLASSES)
-    model= DeepLabV3Plus(NUM_CLASSES, version='DeepLabV3Plus', base_model="MobileNetV2")(input_size=(IMAGE_SIZE, IMAGE_SIZE))
+    model= DeepLabV3Plus(NUM_CLASSES, version='DeepLabV3Plus', base_model="VGG16")(input_size=(IMAGE_SIZE, IMAGE_SIZE))
     #model = UNet(NUM_CLASSES, base_model='MobileNetV2')(input_size=(IMAGE_SIZE, IMAGE_SIZE))
     #model= FCN(NUM_CLASSES, base_model='MobileNetV2')(input_size=(IMAGE_SIZE, IMAGE_SIZE))
     #model = PAN(NUM_CLASSES, base_model="MobileNetV2")(input_size=(IMAGE_SIZE, IMAGE_SIZE))
@@ -220,8 +220,13 @@ def UNET(img_size, num_classes):
 
 def infer(model, image_tensor):
     predictions = model.predict(np.expand_dims((image_tensor), axis=0))
+    print(predictions.shape)
+    print(predictions[0,400,400]);
     predictions = np.squeeze(predictions)
+    print(predictions[400,400]);
     predictions = np.argmax(predictions, axis=2)
+    print(predictions[400,400]);
+    #print(f'Shape:{predictions.shape}')
     return predictions
 
 def decode_segmentation_masks(mask, colormap, n_classes):
@@ -244,7 +249,7 @@ def get_overlay(image, colored_mask):
     return overlay
 
 
-def plot_samples_matplotlib(display_list, figsize=(5, 3)):
+def plot_samples_matplotlib(display_list, figsize=(5, 4)):
     _, axes = plt.subplots(nrows=1, ncols=len(display_list), figsize=figsize)
     for i in range(len(display_list)):
         if display_list[i].shape[-1] == 3:
@@ -256,12 +261,15 @@ def plot_samples_matplotlib(display_list, figsize=(5, 3)):
 def plot_predictions(images_list, colormap, model):
     for image_file in images_list:
         image_tensor = read_image(image_file)
-        print(image_tensor.shape)
+        print(f"image_tensor.shape: {image_tensor.shape}")
         prediction_mask = infer(image_tensor=image_tensor, model=model)
+        print(f'prediction_mask.shape : {prediction_mask.shape}')
         prediction_colormap = decode_segmentation_masks(prediction_mask, colormap, 10)
+        print(f'prediction_colormap.shape : {prediction_colormap.shape}')
+        print(prediction_colormap)
         overlay = get_overlay(image_tensor, prediction_colormap)
         plot_samples_matplotlib(
-            [image_tensor, overlay, prediction_colormap], figsize=(8, 4)
+            [prediction_mask,image_tensor, overlay, prediction_colormap], figsize=(8, 4)
         )
 
 def load_image(name):
@@ -357,22 +365,14 @@ elif __name__ == "__main__" and MODE == 3:
         converter_float32 = tf.lite.TFLiteConverter.from_keras_model(model)  # Your model's name
         converter_float16 = tf.lite.TFLiteConverter.from_keras_model(model)  # Your model's name
         converter_float32_ = tf.lite.TFLiteConverter.from_keras_model(model)  # Your model's name
+    
+        def generater_rep_dataset():
+            num_images = 100
+            images = sorted(glob(os.path.join(DATA_DIR, "validation/images/*")))
+            masks = sorted(glob(os.path.join(DATA_DIR, "validation/masks/*")))
 
-        for i, name in enumerate(images):
-
-            image=load_image(name)
-            image = imagenet_utils.preprocess_input(image.astype(np.float32), data_format='channels_last',
-                                                    mode='torch')
-            image=cv2.resize(image,(IMAGE_SIZE,IMAGE_SIZE),interpolation=cv2.INTERSECT_NONE)
-            image = np.expand_dims(image, axis=0)
-            dataset_ = tf.data.Dataset.from_tensor_slices((image)).batch(1)
-
-        
-        def representative_data_gen():
-            print("REP DATASET CALLED")
-            for input_value in dataset_.take(10):
-                print([input_value])
-                yield [input_value]
+            for i in range(num_images):
+                
 
     model_quant_file="q_" + MODEL.split("/")[-1].split(".")[0]
 
@@ -383,7 +383,7 @@ elif __name__ == "__main__" and MODE == 3:
     converter_int8.inference_input_type = tf.uint8
     converter_int8.inference_output_type = tf.uint8
     converter_int8.optimizations = [tf.lite.Optimize.DEFAULT]
-    converter_int8.representative_dataset = representative_data_gen
+    converter_int8.representative_dataset = generater_rep_dataset
     tflite_model_quant_INT8 = converter_int8.convert()
 
     tflite_model_quant_file_INT8 = model_quant_file+'_INT8' +'.tflite'
