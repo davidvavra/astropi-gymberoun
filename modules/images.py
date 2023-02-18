@@ -4,7 +4,7 @@ import os
 from PIL import Image, ImageDraw
 
 from modules import files
-logger = logging.getLogger("astropi.main")
+logger = logging.getLogger("astropi")
 
 def process_image(base_folder, counter):
     """Function to crop and preprocess a single image during the experiment

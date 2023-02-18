@@ -5,7 +5,7 @@ from modules import files
 
 
 def create_logger(base_folder):
-    logger = logging.getLogger("astropi.main")
+    logger = logging.getLogger("astropi")
     try:
         logger.setLevel(logging.DEBUG)
         folder_path = f"{base_folder}/{files.LOGS_FOLDER}"

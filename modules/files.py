@@ -3,7 +3,7 @@ import os
 from _csv import writer
 from datetime import datetime
 import logging
-logger = logging.getLogger("astropi.main")
+logger = logging.getLogger("astropi")
 
 # Folder names
 IMAGES_FOLDER = "images"
