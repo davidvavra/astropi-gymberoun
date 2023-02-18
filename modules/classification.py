@@ -6,7 +6,7 @@ from modules.run_ai import AI
 from modules import coverage
 from modules import files
 
-logger_thread = logging.getLogger("astropi.thread")
+logger_thread = logging.getLogger("astropi-thread")
 
 
 def start(logger, base_folder, image, model="modules/model/q_PAN_MNV2-1024_INT8_edgetpu.tflite"):
