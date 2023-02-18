@@ -19,7 +19,7 @@ NUM_CLASSES = 10
 BATCH_SIZE = 1
 DATA_DIR = "/home/cyril/Documents/astropi-gymberoun/local/AI/final_dataset"
 MODE = 3 # 1 - train, 2 - test, 3 - convert, 4 - evaluate, 5 - not working
-MODEL = 'models/DLAB-VGG16-1024.hdf5'
+MODEL = 'models/PAN_MNV2-1024.hdf5'
 
 mpl.use('TkAgg')
 
@@ -36,10 +36,10 @@ tf.keras.backend.clear_session()
 def create_model(compile=False):
     #model= DeeplabV3Plus(image_size=IMAGE_SIZE, num_classes=NUM_CLASSES)
     #model= UNET(img_size=IMAGE_SIZE, num_classes=NUM_CLASSES)
-    model= DeepLabV3Plus(NUM_CLASSES, version='DeepLabV3Plus', base_model="VGG16")(input_size=(IMAGE_SIZE, IMAGE_SIZE))
+    #model= DeepLabV3Plus(NUM_CLASSES, version='DeepLabV3Plus', base_model="VGG16")(input_size=(IMAGE_SIZE, IMAGE_SIZE))
     #model = UNet(NUM_CLASSES, base_model='MobileNetV2')(input_size=(IMAGE_SIZE, IMAGE_SIZE))
     #model= FCN(NUM_CLASSES, base_model='MobileNetV2')(input_size=(IMAGE_SIZE, IMAGE_SIZE))
-    #model = PAN(NUM_CLASSES, base_model="MobileNetV2")(input_size=(IMAGE_SIZE, IMAGE_SIZE))
+    model = PAN(NUM_CLASSES, base_model="MobileNetV2")(input_size=(IMAGE_SIZE, IMAGE_SIZE))
     if(compile):
         model.compile(optimizer=tf.keras.optimizers.Adam(lr=0.001),
                 loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
@@ -336,8 +336,8 @@ elif __name__ == "__main__" and MODE == 2:
 elif __name__ == "__main__" and MODE == 3:
     print(MODEL)
     # List all validation data (images & masks)
-    images = sorted(glob(os.path.join(DATA_DIR, "validation/images/*")))
-    masks = sorted(glob(os.path.join(DATA_DIR, "validation/masks/*")))
+    images = sorted(glob(os.path.join(DATA_DIR, "combined original/images/*")))
+    masks = sorted(glob(os.path.join(DATA_DIR, "combined original/masks/*")))
 
     # Creating training and validation datasets
     #dataset = data_generator(images, masks, idk=True)
@@ -368,15 +368,11 @@ elif __name__ == "__main__" and MODE == 3:
         converter_float16 = tf.lite.TFLiteConverter.from_keras_model(model)  # Your model's name
         converter_float32_ = tf.lite.TFLiteConverter.from_keras_model(model)  # Your model's name
     
-    images = glob(os.path.join(DATA_DIR, "validation/images/*"))
-    val_images = sorted(glob(os.path.join(DATA_DIR, "validation/images/*")))
-    val_masks = sorted(glob(os.path.join(DATA_DIR, "validation/masks/*")))
-
     # Creating training and validation datasets
-    val_dataset = data_generator(val_images, val_masks)
-    rep_ds = val_dataset.shuffle(128).take(100)
+    val_dataset = data_generator(images, masks)
+    #rep_ds = val_dataset.shuffle(128).take(100)
     def representative_data_gen():
-        for image,mask in rep_ds:
+        for image,mask in val_dataset:
             yield [image]
 
     model_quant_file="q_" + MODEL.split("/")[-1].split(".")[0]
@@ -391,7 +387,7 @@ elif __name__ == "__main__" and MODE == 3:
     converter_int8.representative_dataset = representative_data_gen
     tflite_model_quant_INT8 = converter_int8.convert()
 
-    tflite_model_quant_file_INT8 = model_quant_file+'_INT8' +'.tflite'
+    tflite_model_quant_file_INT8 = model_quant_file+'_INT8-fd' +'.tflite'
     print(tflite_model_quant_file_INT8)
     tflite_model_quant_path_INT8 = os.path.join(saved_tflite_model_path,tflite_model_quant_file_INT8)
     print(tflite_model_quant_path_INT8)

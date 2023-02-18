@@ -23,7 +23,7 @@ def call_AI(image,model):
     logger.info(f"Image {image} processed successfully and final mask was saved to {img_path}")
     logger.info(f"Calculated coverage on image is: {save_coverage(img_path)}")
 
-def start_classification(image, model="model/q_DeepLabV3-VGG16-1024px_INT8_edgetpu.tflite"):
+def start_classification(image, model="model/q_PAN_MNV2-1024_INT8_edgetpu.tflite"):
     """Function that starts image classification in new thread and kills previous thread if it exists -> it likely got stuck
 
     Args:
