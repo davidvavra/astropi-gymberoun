@@ -1,5 +1,7 @@
+from code import interact
 from glob import glob
 import os
+import random
 import tensorflow as tf
 import numpy as np
 import cv2
@@ -10,13 +12,13 @@ from deeplab_v3_plus import DeepLabV3Plus
 from unet import UNet
 from fcn import FCN
 from pan import PAN
-from keras_applications import imagenet_utils
+from tensorflow.keras.applications import imagenet_utils
 
 IMAGE_SIZE = 1024
 NUM_CLASSES = 10
 BATCH_SIZE = 1
 DATA_DIR = "/home/cyril/Documents/astropi-gymberoun/local/AI/final_dataset"
-MODE = 3 # 1 - train, 2 - test, 3 - convert, 4 - evaluate
+MODE = 3 # 1 - train, 2 - test, 3 - convert, 4 - evaluate, 5 - not working
 MODEL = 'models/DLAB-VGG16-1024.hdf5'
 
 mpl.use('TkAgg')
@@ -366,13 +368,16 @@ elif __name__ == "__main__" and MODE == 3:
         converter_float16 = tf.lite.TFLiteConverter.from_keras_model(model)  # Your model's name
         converter_float32_ = tf.lite.TFLiteConverter.from_keras_model(model)  # Your model's name
     
-        def generater_rep_dataset():
-            num_images = 100
-            images = sorted(glob(os.path.join(DATA_DIR, "validation/images/*")))
-            masks = sorted(glob(os.path.join(DATA_DIR, "validation/masks/*")))
+    images = glob(os.path.join(DATA_DIR, "validation/images/*"))
+    val_images = sorted(glob(os.path.join(DATA_DIR, "validation/images/*")))
+    val_masks = sorted(glob(os.path.join(DATA_DIR, "validation/masks/*")))
 
-            for i in range(num_images):
-                
+    # Creating training and validation datasets
+    val_dataset = data_generator(val_images, val_masks)
+    rep_ds = val_dataset.shuffle(128).take(100)
+    def representative_data_gen():
+        for image,mask in rep_ds:
+            yield [image]
 
     model_quant_file="q_" + MODEL.split("/")[-1].split(".")[0]
 
@@ -383,7 +388,7 @@ elif __name__ == "__main__" and MODE == 3:
     converter_int8.inference_input_type = tf.uint8
     converter_int8.inference_output_type = tf.uint8
     converter_int8.optimizations = [tf.lite.Optimize.DEFAULT]
-    converter_int8.representative_dataset = generater_rep_dataset
+    converter_int8.representative_dataset = representative_data_gen
     tflite_model_quant_INT8 = converter_int8.convert()
 
     tflite_model_quant_file_INT8 = model_quant_file+'_INT8' +'.tflite'
@@ -392,13 +397,40 @@ elif __name__ == "__main__" and MODE == 3:
     print(tflite_model_quant_path_INT8)
     open(tflite_model_quant_path_INT8, "wb").write(tflite_model_quant_INT8)
     print('Conversion Successful. File written to ', tflite_model_quant_path_INT8)
+
+    #test_accuracy = evaluate(interpreter)
+
 elif __name__ == '__main__' and MODE == 4:
     model = create_model(compile=True)
     model.load_weights(MODEL)
     model.summary()
     print("Evaluate on combined data")
     images = sorted(glob(os.path.join(DATA_DIR, "combined/images/*")))
-    masks = sorted(glob(os.path.join(DATA_DIR, "combined/masks/*")))
+    masks = sorted(glob(os.path.join(DATA_DIR, "combined/masks/*")))    
     dataset = data_generator(images, masks)
     result = model.evaluate(dataset, batch_size=128)
     print("test loss, combined acc:", result)
+
+elif __name__ == '__main__' and MODE == 5:
+    interpreter = tf.lite.Interpreter("Saved_TFLite_Model/q_DLAB-VGG16-1024_INT8.tflite")
+    print(interpreter)
+    interpreter.allocate_tensors()
+    input_details = interpreter.get_input_details()
+    print(input_details)
+    output_details = interpreter.get_output_details()
+    print(output_details)
+    image = cv2.resize(load_image(os.path.join(DATA_DIR, "combined/images/combined_064.jpg")), dsize=(IMAGE_SIZE,IMAGE_SIZE))
+    color_image = imagenet_utils.preprocess_input(image.astype(np.uint8), data_format='channels_last', mode='torch')
+    color_image = np.expand_dims(color_image, axis=0)
+    interpreter.set_tensor(input_details[0]['index'], color_image.astype(np.uint8))
+    print("Invoking")
+    interpreter.invoke()
+
+    output_data = interpreter.get_tensor(output_details[0]['index'])
+    print("Output Data Shape", output_data.shape)
+    if np.ndim(output_data) == 4:
+                  prediction = np.squeeze(output_data, axis=0)
+    prediction = Image.fromarray(np.uint8(prediction))
+
+    plt.imshow(prediction)
+    plt.show()
