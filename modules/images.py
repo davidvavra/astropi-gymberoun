@@ -109,7 +109,7 @@ def _parent_mask(img, masking_treshold=40):
     #checking if the image is usable has been removed 
     return box
 
-def _mask_im(im, mask_box, color=(0, 0, 0)):
+def _mask_im(im, mask_box):
     """Create a circular region and fill everything else with one uniform color
 
     Args:
