@@ -1,8 +1,7 @@
 import csv
 import os
+from _csv import writer
 from datetime import datetime
-
-from urllib3.filepost import writer
 
 # Folder names
 IMAGES_FOLDER = "images"

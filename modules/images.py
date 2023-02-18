@@ -25,7 +25,7 @@ def process_image(base_folder, logger, counter):
             return path
         # if the image is considered unusable we do nothing
         else:
-            logger.debug(f"image number {counter} could not be cropped")
+            logger.debug(f"image number {counter} considered unusable")
             # Save at least raw image
             os.system("cp " + photo_path + " " + raw_path)
             return None
