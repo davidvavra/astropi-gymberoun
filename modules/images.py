@@ -9,6 +9,11 @@ from modules import files
 def process_image(base_folder, logger, counter):
     """Function to crop and preprocess a single image during the experiment
 
+    Args:
+        base_folder: Base folder for all data
+        logger: Main logger
+        counter: Iteration number
+
     Returns:
         [] - path to the processed image and boolean whether is usable for classification
     """

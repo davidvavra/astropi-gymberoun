@@ -24,5 +24,5 @@ def create_logger(base_folder):
         logger.addHandler(fh)
         logger.addHandler(ch)
     except Exception as E:
-        print("Couldn't create logfile: ${E}")
+        print(f"Couldn't create logfile: ${E}")
     return logger

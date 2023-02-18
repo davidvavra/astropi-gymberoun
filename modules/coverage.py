@@ -4,7 +4,10 @@ import numpy as np
 
 def get(filename):
     """
-    Get mask coverage
+    Get masked image coverage in text form.
+
+    Args:
+        filename: masked image
     """
     coverage = []
 

@@ -13,6 +13,8 @@ def start(logger, base_folder, image, model="model/q_PAN_MNV2-1024_INT8_edgetpu.
     """Function that starts image classification in new thread and kills previous thread if it exists -> it likely got stuck
 
     Args:
+        logger: main logger
+        base_folder (str): base folder for all data
         image (str): path to image to process
         model (str, optional): path to model if different wanted. Defaults to "models/deeplab.tflite".
     """
@@ -37,6 +39,7 @@ def _run_classification_in_thread(base_folder, image, model):
     """Function that calls AI model on image and then processes outputed (calculates coverage)
 
     Args:
+        base_folder (str): base folder for all data
         image (str): path to image to process
         model (str): path to model to use
     """
