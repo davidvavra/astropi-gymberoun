@@ -71,7 +71,7 @@ class AI():
         Returns:
             np.array: np.array of raw model output
         """
-        logger.info(f"Processing image {image} on EdgeTPU")
+        logger.info(f"Processing image {image} on EdgeTPU <fn: process_image_itnernal>")
         img = Image.open(image)
         img = img.resize((self.width,self.height), Image.ANTIALIAS)
         common.set_input(self.interpreter, img)
@@ -79,14 +79,6 @@ class AI():
         self.interpreter.invoke()
         logger.debug("Got result from interpreter.")
         self.result = segment.get_output(self.interpreter)
-        for x in self.result:
-            for y in x:
-                y_max = y.max()
-                y_min = y.min()
-                y_ndMax = y[1:].max()
-                if((y_max - y_ndMax) < y_min or (y_ndMax - y_min) > 10):
-                    y[0] = y_min
-                    y_ndMax = 255
         self.result = np.argmax(self.result, axis=2)
         return self.result
 
@@ -118,7 +110,7 @@ class AI():
         Returns:
             str: where final image is saved
         """
-        logger.info(f"Processing image {image} on EdgeTPU")
+        logger.info(f"Processing image {image} on EdgeTPU <fn: run_model>")
         f_name, f_ext = path.splitext(path.basename(image))
         new_f_name = f_name + "_mask"
         final_f_name = new_f_name + f_ext
