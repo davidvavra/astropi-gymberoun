@@ -45,7 +45,7 @@ def _run_classification_in_thread(base_folder, image, model):
     """
     # Define model
     logger_thread.debug(f"Initializing model on EdgeTPU")
-    AI_model = AI(model, folder="masked")
+    AI_model = AI(model, folder="images/masked")
     # Get path where final image is saved from AI model
     logger_thread.info(f"Processing image {image} on EdgeTPU")
     img_path = AI_model.run_model(image)
