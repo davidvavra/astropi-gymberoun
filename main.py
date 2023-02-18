@@ -80,5 +80,5 @@ while now_time < start_time + timedelta(minutes=178):
         logger.error(f'Failed to save data to CSV: {e}')
 
     # Wait till next iteration
-    sleep(30)
+    sleep(60)
     now_time = datetime.now()
