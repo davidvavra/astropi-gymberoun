@@ -50,7 +50,14 @@ def _run_classification_in_thread(base_folder, image, model):
     logger_thread.info(f"Processing image {image} on EdgeTPU")
     img_path = AI_model.run_model(image)
     logger_thread.info(f"Image {image} processed successfully and final mask was saved to {img_path}")
-    coverage_data = coverage.get(img_path)
-    logger_thread.info(f"Calculated coverage on image is: {coverage_data}")
-    files.add_classification_csv_row(base_folder, img_path, coverage_data)
-    logger_thread.debug(f"Coverage saved to CSV")
+    try:
+        coverage_data = coverage.get(img_path)
+        logger_thread.info(f"Calculated coverage on image is: {coverage_data}")
+        try:
+            files.add_classification_csv_row(base_folder, img_path, coverage_data)
+            logger_thread.debug(f"Coverage saved to CSV")
+        except Exception as e:
+            logger_thread.error(f'Failed save coverage to CSV: {e}')
+    except Exception as e:
+        logger_thread.error(f'Failed to calculate coverage from {img_path}: {e}')
+
