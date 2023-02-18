@@ -37,14 +37,14 @@ while now_time < start_time + timedelta(minutes=178):
     # Capture image
     image_file = None
     try:
-        camera.capture(base_folder / files.LAST_IMAGE_FILE)
+        camera.capture(f"{base_folder}/{files.LAST_IMAGE_FILE}")
         # Crop image & prepare for classification
-        image_file = images.process_image(base_folder, counter)
+        image_file = images.process_image(base_folder, logger, counter)
         if image_file is not None:
             # Image considered usable for classification
             try:
                 # Start classification in separate thread
-                classification.start(image_file)
+                classification.start(logger, base_folder, image_file)
                 logger.debug(f'Image passed to the classification thread')
             except Exception as e:
                 logger.error(f'Classification failed: {e}')
