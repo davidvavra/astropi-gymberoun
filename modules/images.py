@@ -10,7 +10,7 @@ def process_image(base_folder, logger, counter):
     """Function to crop and preprocess a single image during the experiment
 
     Returns:
-        string - path to the processed image or None if the image was deemed unusable;
+        [] - path to the processed image and boolean whether is usable for classification
     """
 
     photo_path = f"{base_folder}/{files.LAST_IMAGE_FILE}"
@@ -22,18 +22,16 @@ def process_image(base_folder, logger, counter):
             processed_image = output[0]
             path = f"{base_folder}/{files.CROPPED_IMAGES_FOLDER}/image_{counter}_croppped.jpg"
             processed_image.save(path)
-            return path
-        # if the image is considered unusable we do nothing
-        else:
-            logger.debug(f"image number {counter} considered unusable")
+            return [path, True]
+        else: # Image is not usable
             # Save at least raw image
             os.system("cp " + photo_path + " " + raw_path)
-            return None
+            return [raw_path, False]
     except:
         logger.error(f"Error occured while trying to process image number {counter}")
         # Save at least raw image
         os.system("cp " + photo_path + " " + raw_path)
-        return None
+        return [raw_path, False]
 
 
 def _process_image(input_image, threshold=40, output_size=(1024, 1024), image_mask=False):

@@ -29,7 +29,7 @@ def create_csv_files(base_folder):
     with open(f"{base_folder}/{DATA_CSV_FILE}", 'w') as f:
         writer1 = csv.writer(f)
         header = (
-            "Date/time", "Image", "Temperature", "Pressure", "Humidity", "Yaw", "Pitch", "Row", "Mag_x", "Mag_y",
+            "Date/time", "Image", "Temperature", "Pressure", "Humidity", "Yaw", "Pitch", "Roll", "Mag_x", "Mag_y",
             "Mag_z", "Acc_x",
             "Acc_y", "Acc_z", "Gyro_x", "Gyro_y", "Gyro_z", "Latitude", "Longitude")
         writer1.writerow(header)
