@@ -9,7 +9,7 @@ from modules import files
 logger_thread = logging.getLogger("astropi-thread")
 
 
-def start(logger, base_folder, image, model="model/q_PAN_MNV2-1024_INT8_edgetpu.tflite"):
+def start(logger, base_folder, image, model="modules/model/q_PAN_MNV2-1024_INT8_edgetpu.tflite"):
     """Function that starts image classification in new thread and kills previous thread if it exists -> it likely got stuck
 
     Args:
