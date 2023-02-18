@@ -8,7 +8,6 @@ def get():
     Returns:
         [] - latitude, longitude
     """
-
     location = []
     point = ISS.coordinates()
     location.append(point.latitude.degrees)

@@ -26,13 +26,19 @@ def start(logger, base_folder, image, model="modules/model/q_PAN_MNV2-1024_INT8_
     # If more than 1 thread are running at the time (1 is main thread)
     if (act_count > 1):
         # Kill another thread
-        thr_list[1].kill()
+        try:
+            thr_list[1].kill()
+        except Exception as E:
+            logger.critical(f'Unable to kill thread due to Exception: {E} <file: classification.py, fn: start>')
         logger.warning(f"There were too many threads so one was killed <file: classification.py, fn: start>")
     # Start processing new image
-    logger.info(f"Starting image processing on another thread with model {model} on image {image}")
-    t1 = KThread(target=_run_classification_in_thread, args=(base_folder, image, model,))
-    t1.start()
-    logger.debug("Started another thread")
+    logger.info(f"Starting image processing on another thread with model {model} on image {image} <file: classification.py, fn:start>")
+    try:
+        t1 = KThread(target=_run_classification_in_thread, args=(base_folder, image, model,))
+        t1.start()
+    except Exception as E:
+        logger.critical(f'Unable to start another thread due to Exception: {E} <file: classification.py, fn: start>')
+    logger.debug("Started another thread <file: classification.py, fn: start>")
 
 
 def _run_classification_in_thread(base_folder, image, model):

@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
-
+import logging
+logger = logging.getLogger("astropi.thread")
 
 def get(filename):
     """
@@ -9,6 +10,7 @@ def get(filename):
     Args:
         filename: masked image
     """
+    logger.debug(f'Calculating coverage of mask... <file: coverage.py, fn: get>')
     coverage = []
 
     # Colors
@@ -47,6 +49,6 @@ def get(filename):
         array = np.array(mask)
         average_color = np.mean(array) / 2.55
         coverage.append(average_color)
-
+    logger.info(f'Calculated mask coverage is {coverage} (ocean, river, clouds, field, deser, unknown_land, unknown, island, mountains) <file: coverage.py, fn: get>')
     return coverage
 
