@@ -8,6 +8,7 @@ import threading
 import logging
 logger = logging.getLogger("astropi.thread")
 
+
 class KThread(threading.Thread):
   """A subclass of threading.Thread, with a kill()
 method."""

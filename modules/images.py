@@ -1,10 +1,10 @@
 import logging
-import os
 import shutil
 
 from PIL import Image, ImageDraw
 
 from modules import files
+
 logger = logging.getLogger("astropi")
 
 
@@ -90,6 +90,7 @@ def _make_mask(im, masking_treshold=40):
     mask = gray.point(lambda p: p > masking_treshold and 255)
     return mask
 
+
 def _parent_mask(img, masking_treshold=40):
     """Function to create square mask for part of image with usable data
 
@@ -107,9 +108,9 @@ def _parent_mask(img, masking_treshold=40):
     # Crop to wanted data
     cropped = mask.crop(box)
     # Check if image is uable or not
-    
-    #checking if the image is usable has been removed 
+
     return box
+
 
 def _mask_im(im, mask_box):
     """Create a circular region and fill everything else with one uniform color

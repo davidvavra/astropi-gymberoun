@@ -63,7 +63,6 @@ class AI():
         logger.debug("Decoded segmented image to mask")
         return self.rgb
 
-
     def process_image_internal(self, image):
         """Function to process image (internal)
 
