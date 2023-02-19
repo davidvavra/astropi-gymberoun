@@ -44,9 +44,10 @@ while now_time < start_time + timedelta(minutes=178):
     # Capture image
     image_file = None
     try:
-        camera.capture(f"{base_folder}/{files.LAST_IMAGE_FILE}")
+        raw_image_path = f"{base_folder}/{files.RAW_IMAGES_FOLDER}/image{counter}_raw.jpg"
+        camera.capture(raw_image_path)
         # Crop image & prepare for classification
-        output = images.process_image(base_folder, counter)
+        output = images.process_image(base_folder, raw_image_path, counter)
         image_file = output[0]
         usable = output[1]
         if usable:

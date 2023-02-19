@@ -15,7 +15,6 @@ CSV_FOLDER = "csv"
 LOGS_FOLDER = "logs"
 
 # File names
-LAST_IMAGE_FILE = f"{IMAGES_FOLDER}/last_image.jpg"
 DATA_CSV_FILE = f"{CSV_FOLDER}/data.csv"
 CLASSIFICATION_CSV_FILE = f"{CSV_FOLDER}/classification.csv"
 

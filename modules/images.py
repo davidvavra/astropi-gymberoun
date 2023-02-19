@@ -8,22 +8,21 @@ from modules import files
 logger = logging.getLogger("astropi")
 
 
-def process_image(base_folder, counter):
+def process_image(base_folder, raw_image_path, counter):
     """Function to crop and preprocess a single image.
     We crop to image to a square and add a circular mask to filter out the window edge.
 
     Args:
         base_folder: Base folder for all data
+        raw_image_path: Path to a captured raw image
         counter: Iteration number
 
     Returns:
         [] - path to the processed image and boolean whether is usable for classification
     """
 
-    photo_path = f"{base_folder}/{files.LAST_IMAGE_FILE}"
-    raw_path = f"{base_folder}/{files.RAW_IMAGES_FOLDER}/image{counter}_raw.jpg"
     try:
-        output = _process_image(photo_path)
+        output = _process_image(raw_image_path)
         if output:  # Image is usable
             logger.debug(f"Image number {counter} cropped succesfully")
             processed_image = output[0]
@@ -31,14 +30,10 @@ def process_image(base_folder, counter):
             processed_image.save(path)
             return [path, True]
         else: # Image is not usable
-            # Save at least raw image
-            shutil.copy(photo_path, raw_path)
-            return [raw_path, False]
+            return [raw_image_path, False]
     except:
         logger.error(f"Error occured while trying to process image number {counter}")
-        # Save at least raw image
-        shutil.copy(photo_path, raw_path)
-        return [raw_path, False]
+        return [raw_image_path, False]
 
 
 def _process_image(input_image, threshold=40, output_size=(1024, 1024), image_mask=False):
