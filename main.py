@@ -31,11 +31,15 @@ counter = 0
 start_time = datetime.now()
 now_time = datetime.now()
 
+# Start measurement
+print(f"Team Astro Pi Barrande says hi and starts recording… ({now_time})")
+
 # Run a loop for (almost) three hours
 while now_time < start_time + timedelta(minutes=178):
     # Start iteration
     counter += 1
     logger.info(f'Iteration {counter}')
+    print(f"Iteration {counter} ({now_time})")
 
     # Capture image
     image_file = None
@@ -82,3 +86,6 @@ while now_time < start_time + timedelta(minutes=178):
     # Wait till next iteration
     sleep(30)
     now_time = datetime.now()
+
+# End measurement
+print(f"Team Astro Pi Barrande stops recording, good bye ({now_time})")
