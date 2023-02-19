@@ -15,7 +15,7 @@ from modules import sensors
 
 # Library setup
 camera = PiCamera()
-camera.resolution = (1820, 1024)
+camera.resolution = (2592, 1944)
 sense = SenseHat()
 
 # File & folder setup

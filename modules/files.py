@@ -50,7 +50,7 @@ def create_csv_files(base_folder):
 
     with open(f"{base_folder}/{CLASSIFICATION_CSV_FILE}", 'w') as f:
         writer2 = csv.writer(f)
-        header = ("Image", "Ocean", "River", "Clouds", "Forest", "Field", "Desert", "Unknown land", "Unknown", "Island",
+        header = ("Date/time", "Image", "Ocean", "River", "Clouds", "Forest", "Field", "Desert", "Unknown land", "Unknown", "Island",
                   "Mountains")
         writer2.writerow(header)
 

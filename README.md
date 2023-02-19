@@ -21,3 +21,12 @@ results.
   color for different topography features. We also save this coverage in percents to a CSV file.
 - We also collect data from all available sensors for the purposes of secondary mission. We also get ISS location and
   save everything to a CSV file.
+
+### Authors
+- Cyril Šebek: machine learning code
+- Jonáš Koller: pre-processing images code
+- Filip Rosický: sensor code
+- Matyáš Leon Dušek: connecting everything together, testing, error handling, logging
+- Adam Vášek: ISS location code, CSV handling
+- Adam Denko: secondary missions
+- David Vávra: mentor, project management, final touches and testing
