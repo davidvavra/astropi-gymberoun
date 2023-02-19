@@ -64,13 +64,12 @@ def _run_classification_in_thread(base_folder, image, model):
     logger_thread.debug(f"Initializing model on EdgeTPU")
     try:
         AI_model = AI(model, files.MASKED_IMAGES_FOLDER, base_folder)
-        logger_thread.info(
+        logger_thread.debug(
             f"Processing image {image} on EdgeTPU <fn: _run_classification_in_thread>")
         img_path = AI_model.run_model(image)
         logger_thread.info(f"Image {image} processed successfully and final mask was saved to {img_path}")
         try:
             coverage_data = coverage.get(img_path)
-            logger_thread.info(f"Calculated coverage on image is: {coverage_data}")
             try:
                 files.add_classification_csv_row(base_folder, img_path, coverage_data)
                 logger_thread.debug(f"Coverage saved to CSV")

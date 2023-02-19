@@ -25,7 +25,7 @@ def process_image(base_folder, counter):
     try:
         output = _process_image(photo_path)
         if output:  # Image is usable
-            logger.debug(f"image number {counter} cropped succesfully")
+            logger.debug(f"Image number {counter} cropped succesfully")
             processed_image = output[0]
             path = f"{base_folder}/{files.CROPPED_IMAGES_FOLDER}/image_{counter}_croppped.jpg"
             processed_image.save(path)

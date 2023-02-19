@@ -35,7 +35,7 @@ class AI():
             self.colormap = colormap
         self.folder = folder
         self.base_folder = base_folder
-        logger.info(f"Initilized model on EdgeTPU with parameters: [width: {self.width}, height: {self.height}, classes: {self.classes}]")
+        logger.debug(f"Initilized model on EdgeTPU with parameters: [width: {self.width}, height: {self.height}, classes: {self.classes}]")
 
     def decode_segmentation_mask_internal(self, mask):
         """Function to recolor mask using colormap (internal)
@@ -73,7 +73,7 @@ class AI():
         Returns:
             np.array: np.array of raw model output
         """
-        logger.info(f"Processing image {image} on EdgeTPU <fn: process_image_internal>")
+        logger.debug(f"Processing image {image} on EdgeTPU <fn: process_image_internal>")
         img = Image.open(image)
         img = img.resize((self.width,self.height), Image.ANTIALIAS)
         common.set_input(self.interpreter, img)
@@ -112,7 +112,7 @@ class AI():
         Returns:
             str: where final image is saved
         """
-        logger.info(f"Processing image {image} on EdgeTPU <fn: run_model>")
+        logger.debug(f"Processing image {image} on EdgeTPU <fn: run_model>")
         f_name, f_ext = path.splitext(path.basename(image))
         new_f_name = f_name + "_masked"
         final_f_name = new_f_name + f_ext
