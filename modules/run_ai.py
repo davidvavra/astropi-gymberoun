@@ -73,7 +73,7 @@ class AI():
         Returns:
             np.array: np.array of raw model output
         """
-        logger.info(f"Processing image {image} on EdgeTPU <fn: process_image_itnernal>")
+        logger.info(f"Processing image {image} on EdgeTPU")
         img = Image.open(image)
         img = img.resize((self.width,self.height), Image.ANTIALIAS)
         common.set_input(self.interpreter, img)
@@ -99,8 +99,8 @@ class AI():
             PIL.Image: colored image mask
         """
         # Load and decode output from model and convert it to PIL.Image
-        output_img = Image.fromarray(self.decode_segmentation_mask_internal(self.result.astype(np.uint8)))
-        return output_img
+        self.output_img = Image.fromarray(self.decode_segmentation_mask_internal(self.result.astype(np.uint8)))
+        return self.output_img
 
     def run_model(self, image):
         """Basically call only this
@@ -112,7 +112,7 @@ class AI():
         Returns:
             str: where final image is saved
         """
-        logger.info(f"Processing image {image} on EdgeTPU <fn: run_model>")
+        logger.info(f"Processing image {image} on EdgeTPU")
         f_name, f_ext = path.splitext(path.basename(image))
         new_f_name = f_name + "_masked"
         final_f_name = new_f_name + f_ext
@@ -120,5 +120,5 @@ class AI():
         self.process_image_internal(image)
         self.get_colored_mask()
         logger.info(f"Successfully processed image {image} on EdgeTPU. Colored image mask will be saved in {final_path}")
-        self.output_img.save(self.final_path)
+        self.output_img.save(final_path)
         return final_path
