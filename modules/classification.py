@@ -65,7 +65,7 @@ def _run_classification_in_thread(base_folder, image, model):
     try:
         AI_model = AI(model, files.MASKED_IMAGES_FOLDER, base_folder)
         logger_thread.info(
-            f"Processing image {image} on EdgeTPU")
+            f"Processing image {image} on EdgeTPU <fn: _run_classification_in_thread>")
         img_path = AI_model.run_model(image)
         logger_thread.info(f"Image {image} processed successfully and final mask was saved to {img_path}")
         try:

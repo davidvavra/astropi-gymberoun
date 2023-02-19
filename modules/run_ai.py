@@ -73,7 +73,7 @@ class AI():
         Returns:
             np.array: np.array of raw model output
         """
-        logger.info(f"Processing image {image} on EdgeTPU")
+        logger.info(f"Processing image {image} on EdgeTPU <fn: process_image_internal>")
         img = Image.open(image)
         img = img.resize((self.width,self.height), Image.ANTIALIAS)
         common.set_input(self.interpreter, img)
@@ -112,7 +112,7 @@ class AI():
         Returns:
             str: where final image is saved
         """
-        logger.info(f"Processing image {image} on EdgeTPU")
+        logger.info(f"Processing image {image} on EdgeTPU <fn: run_model>")
         f_name, f_ext = path.splitext(path.basename(image))
         new_f_name = f_name + "_masked"
         final_f_name = new_f_name + f_ext
