@@ -1,4 +1,10 @@
 def get_data(sense):
+    """
+    Reads data from all available sensors. If reading a sensor fails, it replaces it with undefined value.
+
+    Args:
+        sense: SenseHat
+    """
     sense_data = []
     undefined = -42
 

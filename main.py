@@ -53,6 +53,7 @@ while now_time < start_time + timedelta(minutes=178):
             # Image considered usable for classification
             try:
                 # Start classification in separate thread
+                classification.clean_previous_classification_thread_if_needed()
                 classification.start(base_folder, image_file)
                 logger.debug(f'Image passed to the classification thread')
             except Exception as e:
@@ -88,4 +89,5 @@ while now_time < start_time + timedelta(minutes=178):
     now_time = datetime.now()
 
 # End measurement
+classification.clean_previous_classification_thread_if_needed()
 print(f"Team Astro Pi Barrande stops recording, good bye ({now_time})")

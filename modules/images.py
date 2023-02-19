@@ -6,8 +6,10 @@ from PIL import Image, ImageDraw
 from modules import files
 logger = logging.getLogger("astropi")
 
+
 def process_image(base_folder, counter):
-    """Function to crop and preprocess a single image during the experiment
+    """Function to crop and preprocess a single image.
+    We crop to image to a square and add a circular mask to filter out the window edge.
 
     Args:
         base_folder: Base folder for all data
@@ -44,7 +46,7 @@ def _process_image(input_image, threshold=40, output_size=(1024, 1024), image_ma
     Args:
         input_image (string): Path to image to process
         threshold (int): Threshold for processing. Defaults to 40.
-        output_size (tuple, optional): Size of outputed image. Defaults to (800,800).
+        output_size (tuple, optional): Size of outputed image.
         image_mask (string): Path to image mask (only for cropping). Defaults to False. (=> no mask to crop)
 
     Returns:

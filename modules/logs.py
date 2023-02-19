@@ -5,6 +5,12 @@ from modules import files
 
 
 def create_logger(base_folder):
+    """
+    Creates a logger which writes everything to a file and error+ logs to error output.
+
+    Args:
+        base_folder: base folder for everything
+    """
     logger = logging.getLogger("astropi")
     try:
         logger.setLevel(logging.DEBUG)

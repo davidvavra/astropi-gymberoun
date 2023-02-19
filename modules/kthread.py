@@ -1,8 +1,9 @@
 """
-Code from https://web.archive.org/web/20130503082442/http://mail.python.org/pipermail/python-list/2004-May/281943.html
+This allows us to kill threads, which is not easily possible in the threading library.
+
+The code is taken from https://web.archive.org/web/20130503082442/http://mail.python.org/pipermail/python-list/2004-May/281943.html
 """
 import sys
-import trace
 import threading
 import logging
 logger = logging.getLogger("astropi.thread")
@@ -22,8 +23,8 @@ method."""
     threading.Thread.start(self)
 
   def __run(self):
-    """Hacked run function, which installs the
-trace."""
+    """Run function, which installs the
+race."""
     sys.settrace(self.globaltrace)
     self.__run_backup()
     self.run = self.__run_backup

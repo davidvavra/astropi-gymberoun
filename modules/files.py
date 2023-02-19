@@ -3,6 +3,7 @@ import os
 from _csv import writer
 from datetime import datetime
 import logging
+
 logger = logging.getLogger("astropi")
 
 # Folder names
@@ -20,6 +21,12 @@ CLASSIFICATION_CSV_FILE = f"{CSV_FOLDER}/classification.csv"
 
 
 def create_folders(base_folder):
+    """
+    Creates necessary folders for all data.
+
+    Args:
+        base_folder: base folder for everything
+    """
     _create_folder(base_folder, IMAGES_FOLDER)
     _create_folder(base_folder, RAW_IMAGES_FOLDER)
     _create_folder(base_folder, CROPPED_IMAGES_FOLDER)
@@ -28,6 +35,12 @@ def create_folders(base_folder):
 
 
 def create_csv_files(base_folder):
+    """
+    Creates CSV files for storing the data.
+
+    Args:
+        base_folder: base folder for everything
+    """
     with open(f"{base_folder}/{DATA_CSV_FILE}", 'w') as f:
         writer1 = csv.writer(f)
         header = (
@@ -44,6 +57,15 @@ def create_csv_files(base_folder):
 
 
 def add_data_csv_row(base_folder, location, sensor_data, image_path):
+    """
+    Adds a new row to the main CSV.
+
+    Args:
+        base_folder: base folder for everything
+        location: location data
+        sensor_data: data from sensors
+        image_path: cropped or raw image path
+    """
     csv_data = []
     # Add date and time
     csv_data.append(datetime.now())
@@ -69,6 +91,14 @@ def add_data_csv_row(base_folder, location, sensor_data, image_path):
 
 
 def add_classification_csv_row(base_folder, image_path, coverage):
+    """
+    Adds a new row to the classification CSV.
+
+    Args:
+        base_folder: base folder for everything
+        image_path: masked image path
+        coverage: classification coverage data
+    """
     csv_data = []
     # Add date and time
     csv_data.append(datetime.now())
@@ -86,6 +116,13 @@ def add_classification_csv_row(base_folder, image_path, coverage):
 
 
 def _create_folder(base_folder, folder):
+    """
+    Checks if folder exits and creates it if needed.
+
+    Args:
+        base_folder: base folder for everything
+        folder: folder to create
+    """
     try:
         path = f"{base_folder}/{folder}"
         if not (os.path.isdir(path)):
