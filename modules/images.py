@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 
 from PIL import Image, ImageDraw
 
@@ -31,12 +32,12 @@ def process_image(base_folder, counter):
             return [path, True]
         else: # Image is not usable
             # Save at least raw image
-            os.system("cp " + photo_path + " " + raw_path)
+            shutil.copy(photo_path, raw_path)
             return [raw_path, False]
     except:
         logger.error(f"Error occured while trying to process image number {counter}")
         # Save at least raw image
-        os.system("cp " + photo_path + " " + raw_path)
+        shutil.copy(photo_path, raw_path)
         return [raw_path, False]
 
 
